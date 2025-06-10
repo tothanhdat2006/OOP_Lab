@@ -28,64 +28,79 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            textBox1 = new TextBox();
-            label1 = new Label();
-            label2 = new Label();
-            textBox2 = new TextBox();
+            signin_button = new Button();
+            username_textBox = new TextBox();
+            username_label = new Label();
+            password_label = new Label();
+            password_textBox = new TextBox();
+            button2 = new Button();
             SuspendLayout();
             // 
-            // button1
+            // signin_button
             // 
-            button1.Location = new Point(695, 450);
-            button1.Name = "button1";
-            button1.Size = new Size(150, 58);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            signin_button.Location = new Point(1105, 564);
+            signin_button.Name = "signin_button";
+            signin_button.Size = new Size(150, 58);
+            signin_button.TabIndex = 3;
+            signin_button.Text = "Đăng nhập";
+            signin_button.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // username_textBox
             // 
-            textBox1.Location = new Point(627, 363);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(418, 23);
-            textBox1.TabIndex = 1;
+            username_textBox.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            username_textBox.Location = new Point(837, 446);
+            username_textBox.Name = "username_textBox";
+            username_textBox.Size = new Size(418, 33);
+            username_textBox.TabIndex = 1;
             // 
-            // label1
+            // username_label
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(563, 366);
-            label1.Name = "label1";
-            label1.Size = new Size(58, 15);
-            label1.TabIndex = 2;
-            label1.Text = "Tài khoản";
+            username_label.AutoSize = true;
+            username_label.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            username_label.Location = new Point(716, 447);
+            username_label.Name = "username_label";
+            username_label.Size = new Size(115, 32);
+            username_label.TabIndex = 2;
+            username_label.Text = "Tài khoản";
             // 
-            // label2
+            // password_label
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(563, 407);
-            label2.Name = "label2";
-            label2.Size = new Size(57, 15);
-            label2.TabIndex = 4;
-            label2.Text = "Mật khẩu";
+            password_label.AutoSize = true;
+            password_label.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            password_label.Location = new Point(716, 487);
+            password_label.Name = "password_label";
+            password_label.Size = new Size(115, 32);
+            password_label.TabIndex = 4;
+            password_label.Text = "Mật khẩu";
             // 
-            // textBox2
+            // password_textBox
             // 
-            textBox2.Location = new Point(627, 404);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(418, 23);
-            textBox2.TabIndex = 3;
+            password_textBox.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            password_textBox.Location = new Point(837, 487);
+            password_textBox.Name = "password_textBox";
+            password_textBox.Size = new Size(418, 33);
+            password_textBox.TabIndex = 2;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(716, 564);
+            button2.Name = "button2";
+            button2.Size = new Size(150, 58);
+            button2.TabIndex = 5;
+            button2.Text = "Đăng ký";
+            button2.UseVisualStyleBackColor = true;
             // 
             // mainMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1904, 1041);
-            Controls.Add(label2);
-            Controls.Add(textBox2);
-            Controls.Add(label1);
-            Controls.Add(textBox1);
-            Controls.Add(button1);
+            Controls.Add(button2);
+            Controls.Add(password_label);
+            Controls.Add(password_textBox);
+            Controls.Add(username_label);
+            Controls.Add(username_textBox);
+            Controls.Add(signin_button);
             Name = "mainMenu";
             Text = "Giao diện chính";
             Load += Form1_Load;
@@ -95,10 +110,11 @@
 
         #endregion
 
-        private Button button1;
-        private TextBox textBox1;
-        private Label label1;
-        private Label label2;
-        private TextBox textBox2;
+        private Button signin_button;
+        private TextBox username_textBox;
+        private Label username_label;
+        private Label password_label;
+        private TextBox password_textBox;
+        private Button button2;
     }
 }
