@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="AdminMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin_AllRoomMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin_RoomInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin_RoomInfoEditForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="GuestMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="mainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="GeneralCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
