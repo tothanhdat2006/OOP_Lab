@@ -33,7 +33,7 @@
             username_label = new Label();
             password_label = new Label();
             password_textBox = new TextBox();
-            button2 = new Button();
+            signup_button = new Button();
             SuspendLayout();
             // 
             // signin_button
@@ -44,6 +44,7 @@
             signin_button.TabIndex = 3;
             signin_button.Text = "Đăng nhập";
             signin_button.UseVisualStyleBackColor = true;
+            signin_button.Click += signin_button_Click;
             // 
             // username_textBox
             // 
@@ -81,21 +82,21 @@
             password_textBox.Size = new Size(418, 33);
             password_textBox.TabIndex = 2;
             // 
-            // button2
+            // signup_button
             // 
-            button2.Location = new Point(233, 373);
-            button2.Name = "button2";
-            button2.Size = new Size(150, 58);
-            button2.TabIndex = 5;
-            button2.Text = "Đăng ký";
-            button2.UseVisualStyleBackColor = true;
+            signup_button.Location = new Point(233, 373);
+            signup_button.Name = "signup_button";
+            signup_button.Size = new Size(150, 58);
+            signup_button.TabIndex = 5;
+            signup_button.Text = "Đăng ký";
+            signup_button.UseVisualStyleBackColor = true;
             // 
             // mainMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1064, 681);
-            Controls.Add(button2);
+            Controls.Add(signup_button);
             Controls.Add(password_label);
             Controls.Add(password_textBox);
             Controls.Add(username_label);
@@ -115,6 +116,6 @@
         private Label username_label;
         private Label password_label;
         private TextBox password_textBox;
-        private Button button2;
+        private Button signup_button;
     }
 }
