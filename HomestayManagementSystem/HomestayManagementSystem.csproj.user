@@ -7,9 +7,6 @@
     <Compile Update="Admin_AllRoomMenu.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Admin_RoomInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="Admin_RoomInfoEditForm.cs">
       <SubType>UserControl</SubType>
     </Compile>

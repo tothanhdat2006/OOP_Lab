@@ -42,5 +42,12 @@ namespace HomestayManagementSystem
             this.Controls.Clear();
             this.Controls.Add(generalCalendar);
         }
+
+        private void returnMainMenu_button_Click(object sender, EventArgs e)
+        {
+            var mainMenu_Form = (mainMenu)Tag;
+            mainMenu_Form.Show();
+            Close();
+        }
     }
 }

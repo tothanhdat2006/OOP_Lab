@@ -33,6 +33,7 @@
             updateRoomInfo_button = new Button();
             showRoomDatabase_button = new Button();
             showDatabaseGuest_label = new Button();
+            returnMainMenu_button = new Button();
             SuspendLayout();
             // 
             // welcome_label
@@ -83,11 +84,22 @@
             showDatabaseGuest_label.Text = "Xem database khách";
             showDatabaseGuest_label.UseVisualStyleBackColor = true;
             // 
+            // returnMainMenu_button
+            // 
+            returnMainMenu_button.Location = new Point(12, 12);
+            returnMainMenu_button.Name = "returnMainMenu_button";
+            returnMainMenu_button.Size = new Size(75, 25);
+            returnMainMenu_button.TabIndex = 8;
+            returnMainMenu_button.Text = "Quay về";
+            returnMainMenu_button.UseVisualStyleBackColor = true;
+            returnMainMenu_button.Click += returnMainMenu_button_Click;
+            // 
             // AdminMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1064, 681);
+            Controls.Add(returnMainMenu_button);
             Controls.Add(showDatabaseGuest_label);
             Controls.Add(showRoomDatabase_button);
             Controls.Add(updateRoomInfo_button);
@@ -106,5 +118,6 @@
         private Button updateRoomInfo_button;
         private Button showRoomDatabase_button;
         private Button showDatabaseGuest_label;
+        private Button returnMainMenu_button;
     }
 }

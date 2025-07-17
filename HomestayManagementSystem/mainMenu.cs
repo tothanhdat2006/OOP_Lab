@@ -7,6 +7,13 @@ namespace HomestayManagementSystem
             InitializeComponent();
         }
 
+        public void RestoreMenu()
+        {
+            this.Controls.Clear();
+            InitializeComponent();
+        }
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -14,19 +21,21 @@ namespace HomestayManagementSystem
 
         private void signin_button_Click(object sender, EventArgs e)
         {
-            if(username_textBox.Text == "admin" && password_textBox.Text == "admin123")
+            if(username_textBox.Text == "admin")
             {
                 this.Hide();
                 AdminMenu adminMenu_Form = new AdminMenu();
-                adminMenu_Form.ShowDialog();
-                this.Close();
+                adminMenu_Form.Tag = this;
+                adminMenu_Form.Show(this);
+                Hide();
             }
-            else if (username_textBox.Text == "user" && password_textBox.Text == "user123")
+            else if (username_textBox.Text == "user")
             {
                 this.Hide();
                 GuestMenu guestMenu_Form = new GuestMenu();
-                guestMenu_Form.ShowDialog();
-                this.Close();
+                guestMenu_Form.Tag = this;
+                guestMenu_Form.Show(this);
+                Hide();
             }
             else
             {

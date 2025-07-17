@@ -46,13 +46,13 @@
             returnAdminMenu_button.TabIndex = 7;
             returnAdminMenu_button.Text = "Quay về";
             returnAdminMenu_button.UseVisualStyleBackColor = true;
-            returnAdminMenu_button.Click += returnAdminMenu_button_Click;
+            returnAdminMenu_button.Click += returnMainMenu_button_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(338, 2);
+            label1.Location = new Point(372, -2);
             label1.Name = "label1";
             label1.Size = new Size(273, 45);
             label1.TabIndex = 4;

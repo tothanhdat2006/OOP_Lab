@@ -141,17 +141,11 @@ namespace HomestayManagementSystem
 
         }
 
-        private void returnAdminMenu_button_Click(object sender, EventArgs e)
+        private void returnMainMenu_button_Click(object sender, EventArgs e)
         {
-            if(this.Parent is AdminMenu adminMenu)
-            {
-                adminMenu.RestoreMenu();
-            }
-            else
-            {
-                MessageBox.Show("Parent control is not an AdminMenu instance.");
-            }
+            var mainMenu_Form = (mainMenu)Tag;
+            mainMenu_Form.Show();
+            Close();
         }
-
     }
 }
