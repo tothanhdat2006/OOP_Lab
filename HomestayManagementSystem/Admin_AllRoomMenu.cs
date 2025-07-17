@@ -79,5 +79,9 @@ namespace HomestayManagementSystem
             }
         }
 
+        private void filter_flowLayoutPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

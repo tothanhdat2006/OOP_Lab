@@ -21,3 +21,4 @@ D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\obj\Debug\net8.0-windows\Hom
 D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\obj\Debug\net8.0-windows\HomestayManagementSystem.Admin_RoomInfo.resources
 D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\obj\Debug\net8.0-windows\HomestayManagementSystem.GeneralCalendar.resources
 D:\Project\OOP_Lab\OOP_lab\HomestayManagementSystem\obj\Debug\net8.0-windows\HomestayManagementSystem.Admin_RoomInfoEditForm.resources
+D:\Project\OOP_Lab\OOP_lab\HomestayManagementSystem\obj\Debug\net8.0-windows\HomestayManagementSystem.GuestMenu_ori.resources

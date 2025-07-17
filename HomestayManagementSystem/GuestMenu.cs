@@ -1,218 +1,157 @@
-﻿namespace HomestayManagementSystem
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace HomestayManagementSystem
 {
-	public partial class GuestMenu : Form
-	{
-		private string _username;
+    public partial class GuestMenu : Form
+    {
+        private Panel createRoomPreviewInfo(Room data)
+        {
+            // "Room 101, 0"
+            string roomName = data.getRoomNumber();
+            uint roomStatus = data.getRoomStatus(); // Assuming 0 for available, 1 for occupied, etc.
+            uint maxPersons = data.getMaxPersons(); // Assuming this is the maximum number of persons allowed in the room
+            Panel panel = new Panel
+            {
+                Width = preview_flowLayoutPanel.Width - 5, // Subtracting padding
+                Height = 100, // Fixed height for each panel
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(5)
+            };
+            Label roomName_label = new Label
+            {
+                Text = "Phòng " + roomName + "\nTình trạng: " + (roomStatus == 0 ? "Trống" : "Đang ở"),
+                BackColor = roomStatus == 0 ? Color.LightGreen : Color.LightCoral,
+                ForeColor = Color.Black,
+                AutoSize = false,
+                Height = 65,
+                Dock = DockStyle.Top,
+                Font = new Font("Arial", 14, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Padding = new Padding(3)
+            };
+            Label roomStatus_label = new Label
+            {
+                Text = "Tình trạng: " + (roomStatus == 0 ? "Trống" : "Đang ở"),
+                Dock = DockStyle.Bottom,
+                Height = 30,
+                BackColor = Color.LightGray,
+                ForeColor = Color.Black,
+                Font = new Font("Arial", 12, FontStyle.Regular),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            Label roomCapacity_label = new Label
+            {
+                Text = "Sức chứa: " + maxPersons + " người",
+                Dock = DockStyle.Bottom,
+                Height = 30,
+                BackColor = Color.LightGray,
+                ForeColor = Color.Black,
+                Font = new Font("Arial", 12, FontStyle.Regular),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            Label roomPrice_label = new Label
+            {
+                Text = "Giá: " + data.getPrice() + " VNĐ/đêm",
+                Dock = DockStyle.Bottom,
+                Height = 30,
+                BackColor = Color.LightGray,
+                ForeColor = Color.Black,
+                Font = new Font("Arial", 12, FontStyle.Regular),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            panel.Controls.Add(roomName_label);
+            panel.Controls.Add(roomStatus_label);
+            panel.Controls.Add(roomCapacity_label);
+            panel.Controls.Add(roomPrice_label);
+            return panel;
+        }
 
-		public GuestMenu(string username)
-		{
-			InitializeComponent();
-			this.AutoScaleMode = AutoScaleMode.Dpi;
-			this.Load += GuestMenu_Load;
-			_username = username;
-			tableLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
-			tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
-			tableLayoutPanel2.Paint += tableLayoutPanel2_Paint;
-			SetupPanel2TestDragDrop();
-			SetupRoomSelectionPanelDocking();
-		}
+        private Panel createRoomPanel(Room data)
+        {
+            // "Room 101, 0"
+            string roomName = data.getRoomNumber();
+            uint roomStatus = data.getRoomStatus(); // Assuming 0 for available, 1 for occupied, etc.
+            Panel panel = new Panel
+            {
+                Name = "RoomPanel_" + roomName,
+                Width = bookRoom_flowLayoutPanel.Width - 20, // Subtracting padding
+                Height = 100, // Fixed height for each panel
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(10)
+            };
+            Label roomName_label = new Label
+            {
+                Text = "Phòng " + roomName + "\nTình trạng: " + (roomStatus == 0 ? "Trống" : "Đang ở"),
+                BackColor = roomStatus == 0 ? Color.LightGreen : Color.LightCoral,
+                ForeColor = Color.Black,
+                AutoSize = false,
+                Height = 65,
+                Dock = DockStyle.Top,
+                Font = new Font("Arial", 14, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Padding = new Padding(3)
+            };
+            roomName_label.MouseHover += (sender, e) =>
+            {
+                // Clear previous preview panels
+                preview_flowLayoutPanel.Controls.Clear();
+                // Create and add the preview panel for the clicked room
+                Panel previewPanel = createRoomPreviewInfo(data);
+                preview_flowLayoutPanel.Controls.Add(previewPanel);
+            };
+            Button moreInfo_button = new Button
+            {
+                Text = "Thông tin chi tiết",
+                Dock = DockStyle.Bottom,
+                Height = 30,
+                BackColor = Color.LightBlue,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Arial", 10, FontStyle.Regular),
+                Margin = new Padding(5)
+            };
+            panel.Controls.Add(roomName_label);
+            panel.Controls.Add(moreInfo_button);
+            return panel;
+        }
 
-		private void SetupPanel2TestDragDrop()
-		{
-			// Enable drag and drop
-			panel2_test.AllowDrop = true;
+        public GuestMenu()
+        {
+            InitializeComponent(); 
+            List<Room> dummy_data = new List<Room>
+            {
+                new Room(1, "101", 0, 0, 2, true, 4, 100),
+                new Room(2, "102", 1, 1, 1, false, 2, 80),
+                new Room(3, "103", 0, 0, 3, true, 5, 120),
+                new Room(4, "104", 1, 1, 2, false, 4, 90)
+            };
 
-			// Subscribe to ControlAdded event to handle when controls are added
-			panel2_test.ControlAdded += Panel2Test_ControlAdded;
+            for (int i = 0; i < dummy_data.Count; i++)
+            {
+                Panel panel = createRoomPanel(dummy_data[i]);
+                bookRoom_flowLayoutPanel.Controls.Add(panel);
+            }
 
-			// Subscribe to drag events
-			panel2_test.DragEnter += Panel2Test_DragEnter;
-			panel2_test.DragDrop += Panel2Test_DragDrop;
-		}
+        }
 
-		private void Panel2Test_DragEnter(object sender, DragEventArgs e)
-		{
-			// Allow drag and drop of controls
-			if (e.Data.GetDataPresent(typeof(Label)) || e.Data.GetDataPresent(typeof(LinkLabel)))
-			{
-				e.Effect = DragDropEffects.Copy;
-			}
-			else
-			{
-				e.Effect = DragDropEffects.None;
-			}
-		}
+        private void returnAdminMenu_button_Click(object sender, EventArgs e)
+        {
+            if(this.Parent is AdminMenu adminMenu)
+            {
+                adminMenu.RestoreMenu();
+            }
+            else
+            {
+                MessageBox.Show("Parent control is not an AdminMenu instance.");
+            }
+        }
 
-		private void Panel2Test_DragDrop(object sender, DragEventArgs e)
-		{
-
-		}
-
-		private void Panel2Test_ControlAdded(object sender, ControlEventArgs e)
-		{
-			// Check if the added control is a Label or LinkLabel
-			if (e.Control is Label || e.Control is LinkLabel)
-			{
-				AlignControlsInPanel2Test();
-			}
-		}
-
-		private void AlignControlsInPanel2Test() //draw outline
-		{
-			// Get all Label and LinkLabel controls in panel2_test
-			var labelsAndLinks = panel2_test.Controls.OfType<Control>()
-				.Where(c => c is Label || c is LinkLabel)
-				.OrderBy(c => c.Top) // Sort by current top position
-				.ToList();
-
-			int currentTop = 10; // Starting top margin
-			int spacing = 5; // Space between controls
-
-			foreach (Control control in labelsAndLinks)
-			{
-				// Set the position to top-middle alignment
-				control.Location = new Point(
-					(panel2_test.Width - control.Width) / 2, // Center horizontally
-					currentTop
-				);
-
-				// Update top position for next control
-				currentTop += control.Height + spacing;
-			}
-		}
-
-		// Handle panel resize to maintain center alignment
-		private void Panel2Test_Resize(object sender, EventArgs e)
-		{
-			AlignControlsInPanel2Test();
-		}
-
-		private void GuestMenu_Load(object sender, EventArgs e)
-		{
-			//this.WindowState = FormWindowState.Maximized;
-			panel2_test.Resize += Panel2Test_Resize;
-
-			// Align controls in panel2_test at startup
-			AlignControlsInPanel2Test();
-		}
-
-		protected override void OnResize(EventArgs e)
-		{
-			base.OnResize(e);
-			//scale font theo chiều rộng form
-			float scale = this.Width / 800f;
-			//greetinđg_label.Font = new Font(greeting_label.Font.FontFamily, 16 * scale, greeting_label.Font.Style);
-		}
-
-		private void greeting_label_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void toolStripMenuItem1_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-		{
-			var panel = tableLayoutPanel1;
-			var g = e.Graphics;
-			var pen = Pens.Gray; // You can use a custom Pen for color/thickness
-
-			// Draw vertical lines
-			for (int i = 1; i < panel.ColumnCount; i++)
-			{
-				int x = panel.GetColumnWidths().Take(i).Sum();
-				g.DrawLine(pen, x, 0, x, panel.Height);
-			}
-
-			// Draw horizontal lines
-			for (int i = 1; i < panel.RowCount; i++)
-			{
-				int y = panel.GetRowHeights().Take(i).Sum();
-				g.DrawLine(pen, 0, y, panel.Width, y);
-			}
-		}
-
-		private void bookingToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void room_selection_panel_Paint(object sender, PaintEventArgs e)
-		{
-
-		}
-
-		private void tableLayoutPanel1_Paint_1(object sender, PaintEventArgs e)
-		{
-
-		}
-
-		private void tableLayoutPanel1_Paint_2(object sender, PaintEventArgs e)
-		{
-
-		}
-
-		private void room_selection_panel_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void room101_label_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void SetupRoomSelectionPanelDocking()
-		{
-			room_selection_panel.ControlAdded += RoomSelectionPanel_ControlAdded;
-		}
-
-		private void RoomSelectionPanel_ControlAdded(object sender, ControlEventArgs e)
-		{
-			if (e.Control is Panel panel)
-			{
-				panel.Dock = DockStyle.Top;
-				panel.BringToFront();
-			}
-		}
-
-		private void label5_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void label6_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-		{
-			var panel = tableLayoutPanel2;
-			var g = e.Graphics;
-			var pen = Pens.Gray;
-
-			// Draw vertical lines
-			for (int i = 1; i < panel.ColumnCount; i++)
-			{
-				int x = panel.GetColumnWidths().Take(i).Sum();
-				g.DrawLine(pen, x, 0, x, panel.Height);
-			}
-
-			// Draw horizontal lines
-			for (int i = 1; i < panel.RowCount; i++)
-			{
-				int y = panel.GetRowHeights().Take(i).Sum();
-				g.DrawLine(pen, 0, y, panel.Width, y);
-			}
-		}
-	}
+    }
 }

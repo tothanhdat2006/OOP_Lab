@@ -24,7 +24,7 @@ namespace HomestayManagementSystem
             else if (username_textBox.Text == "user" && password_textBox.Text == "user123")
             {
                 this.Hide();
-                GuestMenu guestMenu_Form = new GuestMenu(username_textBox.Text);
+                GuestMenu guestMenu_Form = new GuestMenu();
                 guestMenu_Form.ShowDialog();
                 this.Close();
             }
