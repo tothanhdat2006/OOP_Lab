@@ -32,13 +32,13 @@
             title = new Label();
             panel1 = new Panel();
             weekCalendar_table = new TableLayoutPanel();
-            label7 = new Label();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            label3 = new Label();
             label2 = new Label();
             label1 = new Label();
+            label3 = new Label();
+            label7 = new Label();
             room_flowPanel = new FlowLayoutPanel();
             nextWeek_button = new Button();
             prevWeek_button = new Button();
@@ -104,17 +104,6 @@
             weekCalendar_table.TabIndex = 2;
             weekCalendar_table.Paint += weekCalendar_table_Paint;
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label7.Location = new Point(784, 1);
-            label7.Margin = new Padding(45, 0, 3, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(37, 21);
-            label7.TabIndex = 6;
-            label7.Text = "Sun";
-            // 
             // label6
             // 
             label6.AutoSize = true;
@@ -148,17 +137,6 @@
             label4.TabIndex = 3;
             label4.Text = "Thu";
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(292, 1);
-            label3.Margin = new Padding(45, 0, 3, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(41, 21);
-            label3.TabIndex = 2;
-            label3.Text = "Wed";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -181,6 +159,28 @@
             label1.TabIndex = 0;
             label1.Text = "Mon";
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label3.Location = new Point(292, 1);
+            label3.Margin = new Padding(45, 0, 3, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(41, 21);
+            label3.TabIndex = 2;
+            label3.Text = "Wed";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label7.Location = new Point(784, 1);
+            label7.Margin = new Padding(45, 0, 3, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(37, 21);
+            label7.TabIndex = 6;
+            label7.Text = "Sun";
+            // 
             // room_flowPanel
             // 
             room_flowPanel.BorderStyle = BorderStyle.FixedSingle;
@@ -197,6 +197,7 @@
             nextWeek_button.TabIndex = 7;
             nextWeek_button.Text = "Next week";
             nextWeek_button.UseVisualStyleBackColor = true;
+            nextWeek_button.Click += nextWeek_button_Click;
             // 
             // prevWeek_button
             // 
@@ -206,6 +207,7 @@
             prevWeek_button.TabIndex = 8;
             prevWeek_button.Text = "Previous week";
             prevWeek_button.UseVisualStyleBackColor = true;
+            prevWeek_button.Click += prevWeek_button_Click;
             // 
             // GeneralCalendar
             // 

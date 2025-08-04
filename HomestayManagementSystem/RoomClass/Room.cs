@@ -23,6 +23,7 @@ public class Room : IRoom
 	protected uint state;
 	protected Person[] curGuest;
 	protected string roomNumber;
+	protected RoomType roomType = RoomType.Standard; // New field
 
 	public Room()
 	{
@@ -35,6 +36,7 @@ public class Room : IRoom
 		price = 0;
 		state = 0;
 		curGuest = Array.Empty<Person>();
+		roomType = RoomType.Standard;
 	}
 
 	public Room(string ID, uint roomStatus, uint numBeds, bool haveBalcony, bool haveKitchen, bool haveBathtub, uint maxPersons, ulong price)
@@ -48,11 +50,13 @@ public class Room : IRoom
 		this.capacity = maxPersons;
 		this.price = price;
 		this.curGuest = Array.Empty<Person>();
+		this.roomType = RoomType.Standard;
 	}
 
 	// Interface methods with correct signatures
 	public virtual void setID(uint id) => this.ID = id.ToString();
-	public virtual void setNumBeds(uint numBeds) => this.numBeds = numBeds;
+    public virtual void setID(string ID) => this.ID = ID;
+    public virtual void setNumBeds(uint numBeds) => this.numBeds = numBeds;
 	public virtual void setHaveBalcony(bool haveBalcony) => this.haveBalcony = haveBalcony;
 	public virtual void setHaveKitchen(bool haveKitchen) => this.haveKitchen = haveKitchen;
 	public virtual void setHaveBathtub(bool haveBathtub) => this.haveBathtub = haveBathtub;
@@ -60,9 +64,11 @@ public class Room : IRoom
 	public virtual void setPrice(ulong price) => this.price = price;
 	public virtual void setState(uint state) => this.state = (uint)state;
 	public virtual void setCurGuest(Person[] curGuest) => this.curGuest = curGuest;
+    public virtual void setRoomNumber(string roomNumber) => this.roomNumber = roomNumber;
 
-	public virtual string getID() => this.ID;
-	public virtual uint getNumBeds() => this.numBeds;
+    public virtual string getID() => this.ID;
+    public virtual string getIDString() => this.ID;
+    public virtual uint getNumBeds() => this.numBeds;
 	public virtual bool getHaveBalcony() => this.haveBalcony;
 	public virtual bool getHaveKitchen() => this.haveKitchen;
 	public virtual bool getHaveBathtub() => this.haveBathtub;
@@ -74,14 +80,74 @@ public class Room : IRoom
 	public virtual uint getMaxPersons() => this.capacity;
 	public virtual Person[] getCurGuest() => this.curGuest;
 
-	// Additional helper methods
-	public virtual void setID(string ID) => this.ID = ID;
-	public virtual string getIDString() => this.ID;
-	public virtual void setRoomNumber(string roomNumber) => this.roomNumber = roomNumber;
+
+	// New enhanced methods (Polymorphism)
+	public virtual void setRoomType(RoomType type) => this.roomType = type;
+	public virtual RoomType getRoomType() => this.roomType;
+
+	public virtual string getDisplayInfo()
+	{
+		string typePrefix = roomType switch
+		{
+			RoomType.Luxury => "Luxury ",
+			RoomType.Suite => "Suite ",
+			_ => ""
+		};
+		return $"{typePrefix}Room {ID} - {getStateText(state)}";
+	}
+
+	public virtual string getAmenitiesText()
+	{
+		var amenities = new List<string>();
+		
+		if (haveBalcony) amenities.Add("🏙️ Balcony");
+		if (haveKitchen) amenities.Add("🍳 Kitchen");
+		if (haveBathtub) amenities.Add("🛁 Bathtub");
+		
+		if (roomType == RoomType.Luxury)
+			amenities.Add("⭐ Premium Service");
+		else if (roomType == RoomType.Suite)
+			amenities.Add("👑 Royal Suite");
+		
+		return amenities.Count > 0 ? string.Join(" | ", amenities) : "🏠 Basic room";
+	}
+
+	public virtual int getCurrentGuestCount()
+	{
+		return curGuest?.Length ?? 0;
+	}
+
+	public virtual string getGuestNames()
+	{
+		if (curGuest == null || curGuest.Length == 0)
+			return "";
+		
+		var names = curGuest.Select(g => g.name).Where(n => !string.IsNullOrEmpty(n));
+		var joinedNames = string.Join(", ", names);
+		return joinedNames.Length > 20 ? joinedNames.Substring(0, 20) + "..." : joinedNames;
+	}
+
+	public virtual string getFullDescription()
+	{
+		return $"{getDisplayInfo()}\n{getAmenitiesText()}\nGuests: {getCurrentGuestCount()}";
+	}
+
+	private string getStateText(uint state)
+	{
+		return state switch
+		{
+			0 => "Free",
+			1 => "Occupied",
+			2 => "Deposited",
+			3 => "Maintenance",
+			_ => "Unknown"
+		};
+	}
 
 	public string getImagePath() => $"Data/Rooms/{ID}.jpg";
 	public string getInfoPath() => $"Data/Rooms/{ID}.ini";
 
+	// Keep existing static methods for backward compatibility
 	public static Room LoadFromIni(string roomNumber)
 	{
 		string iniPath = $"Data/Rooms/{roomNumber}.ini";

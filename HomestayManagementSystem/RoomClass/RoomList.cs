@@ -1,78 +1,228 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 public class RoomList : IRoomList
 {
-	// Singleton
-	private static readonly RoomList _instance = new RoomList();
-	private RoomList() { }
-	public static RoomList Instance
-	{
-		get
-		{
-			return _instance;
-		}
-	}
+    // Singleton pattern (Encapsulation)
+    private static readonly RoomList _instance = new RoomList();
+    private RoomList() { }
+    public static RoomList Instance => _instance;
 
-	protected uint totalRoom;
-	protected ulong basePrice;
-	protected Dictionary<uint, Room> rooms = new Dictionary<uint, Room>();
+    protected uint totalRoom;
+    protected ulong basePrice;
+    protected Dictionary<uint, Room> rooms = new Dictionary<uint, Room>();
+    
+    // Enhanced fields for booking management
+    private Dictionary<uint, List<BookingPeriod>> roomBookings = new Dictionary<uint, List<BookingPeriod>>();
 
-	public Room getRoom(uint id)
-	{
-		if (rooms.ContainsKey(id))
-			return rooms[id];
-		else
-			throw new ArgumentException("Room ID not found.");
-	}
+    // Nested class for booking periods (Encapsulation)
+    private class BookingPeriod
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public Person[] Guests { get; set; } = Array.Empty<Person>();
+        public uint BookingState { get; set; } // 1 = Occupied, 2 = Deposited
+    }
 
-	public int getTotalRoom()
-	{
-		return rooms.Count;
-	}
+    public Room getRoom(uint id)
+    {
+        if (rooms.ContainsKey(id))
+            return rooms[id];
+        else
+            throw new ArgumentException("Room ID not found.");
+    }
 
-	public void addRoom(uint id, uint option)
-	{
-		if (rooms.ContainsKey(id))
-			throw new ArgumentException("Room ID already exists.");
+    public int getTotalRoom()
+    {
+        return rooms.Count;
+    }
 
-		// Use builder pattern to create new room
-		ConcreteBuilder builder = new ConcreteBuilder();
-		RoomDirector director = new RoomDirector(builder);
+    public void addRoom(uint id, uint option)
+    {
+        addRoom(id, option, RoomType.Standard);
+    }
 
-		// Choose construction type based on option parameter
-		switch (option)
-		{
-			case 1:
-				director.ConstructPersonalRoom(); // Small bedroom, no bathtub, 200,000
-				break;
-			case 2:
-				director.ConstructCoupleRoom(); // Medium bedroom, kitchen, bathtub, 500,000
-				break;
-			case 3:
-				director.ConstructQuadroRoom(); // Large bedroom, kitchen, balcony, no bathtub, 800,000
-				break;
-			default:
-				director.customConstruct(1, 1, 1, 1, 300000); // Custom room with all features
-				break;
-		}
+    public void addRoom(uint id, uint option, RoomType roomType)
+    {
+        if (rooms.ContainsKey(id))
+            throw new ArgumentException("Room ID already exists.");
 
-		Room newRoom = builder.getResult();
-		newRoom.setID(id.ToString()); // Set the ID after creation
+        // Use builder pattern to create new room with enhanced functionality
+        ConcreteBuilder builder = new ConcreteBuilder();
+        RoomDirector director = new RoomDirector(builder);
 
-		rooms[id] = newRoom;
-	}
+        // Choose construction type based on option parameter
+        switch (option)
+        {
+            case 1:
+                director.ConstructPersonalRoom();
+                break;
+            case 2:
+                director.ConstructCoupleRoom();
+                break;
+            case 3:
+                director.ConstructQuadroRoom();
+                break;
+            case 4:
+                director.ConstructLuxurySuite();
+                break;
+            default:
+                director.customConstruct(1, 1, 1, 1, 300000, roomType);
+                break;
+        }
 
-	public void deleteRoom(uint id)
-	{
-		if (!rooms.ContainsKey(id))
-			throw new ArgumentException("Room ID not found.");
+        Room newRoom = builder.getResult();
+        newRoom.setID(id.ToString());
+        
+        rooms[id] = newRoom;
+        roomBookings[id] = new List<BookingPeriod>();
+    }
 
-		rooms.Remove(id);
-	}
+    public void deleteRoom(uint id)
+    {
+        if (!rooms.ContainsKey(id))
+            throw new ArgumentException("Room ID not found.");
 
-	public void editRoomBasePrice(uint id, ulong price)
-	{
-		if (!rooms.ContainsKey(id))
-			throw new ArgumentException("Room ID not found.");
+        rooms.Remove(id);
+        roomBookings.Remove(id);
+    }
 
-		rooms[id].setPrice(price);
-	}
+    public void editRoomBasePrice(uint id, ulong price)
+    {
+        if (!rooms.ContainsKey(id))
+            throw new ArgumentException("Room ID not found.");
+
+        rooms[id].setPrice(price);
+    }
+
+    // Enhanced methods implementation
+    public List<Room> getRoomsByState(uint state)
+    {
+        return rooms.Values.Where(r => r.getState() == state).ToList();
+    }
+
+    public List<Room> getRoomsByType(RoomType type)
+    {
+        return rooms.Values.Where(r => r.getRoomType() == type).ToList();
+    }
+
+    public bool isRoomAvailableForDate(uint id, DateTime date)
+    {
+        if (!roomBookings.ContainsKey(id))
+            return true;
+
+        return !roomBookings[id].Any(booking => 
+            date.Date >= booking.StartDate.Date && date.Date <= booking.EndDate.Date);
+    }
+
+    public RoomAvailabilityInfo getRoomAvailabilityInfo(uint id, DateTime weekStart, DateTime weekEnd)
+    {
+        if (!rooms.ContainsKey(id))
+        {
+            return new RoomAvailabilityInfo
+            {
+                IsAvailable = false,
+                StateText = "Room not found",
+                DisplayInfo = $"Room {id} - Not Found"
+            };
+        }
+
+        var room = rooms[id];
+        var bookings = roomBookings.ContainsKey(id) ? roomBookings[id] : new List<BookingPeriod>();
+
+        var activeBooking = bookings.FirstOrDefault(bp => 
+            bp.StartDate.Date <= weekEnd.Date && bp.EndDate.Date >= weekStart.Date);
+
+        if (activeBooking != null)
+        {
+            return new RoomAvailabilityInfo
+            {
+                IsAvailable = false,
+                BookingStart = activeBooking.StartDate,
+                BookingEnd = activeBooking.EndDate,
+                GuestCount = activeBooking.Guests.Length,
+                GuestNames = string.Join(", ", activeBooking.Guests.Select(g => g.name)),
+                State = activeBooking.BookingState,
+                StateText = GetStateText(activeBooking.BookingState),
+                DisplayInfo = room.getDisplayInfo(),
+                AmenitiesText = room.getAmenitiesText()
+            };
+        }
+
+        return new RoomAvailabilityInfo
+        {
+            IsAvailable = true,
+            State = 0,
+            StateText = "Free",
+            GuestCount = 0,
+            GuestNames = "",
+            DisplayInfo = room.getDisplayInfo(),
+            AmenitiesText = room.getAmenitiesText()
+        };
+    }
+
+    public void updateRoomAvailability(uint id, List<Calendar.Event> events)
+    {
+        if (!rooms.ContainsKey(id))
+            return;
+
+        if (!roomBookings.ContainsKey(id))
+            roomBookings[id] = new List<BookingPeriod>();
+
+        roomBookings[id].Clear();
+
+        foreach (var evt in events.Where(e => e.roomId == (int)id))
+        {
+            var booking = new BookingPeriod
+            {
+                StartDate = new DateTime(evt.startDate.year, evt.startDate.month, evt.startDate.day),
+                EndDate = new DateTime(evt.endDate.year, evt.endDate.month, evt.endDate.day),
+                BookingState = evt.type == "Occupied" ? (uint)1 : (uint)2,
+                Guests = evt.guestInfo.HasValue ? new[] { evt.guestInfo.Value } : Array.Empty<Person>()
+            };
+            roomBookings[id].Add(booking);
+        }
+
+        // Update current state based on today's bookings
+        UpdateCurrentRoomState(id);
+    }
+
+    public Dictionary<uint, Room> getAllRoomsDetailed()
+    {
+        return new Dictionary<uint, Room>(rooms);
+    }
+
+    // Helper methods
+    private void UpdateCurrentRoomState(uint id)
+    {
+        if (!rooms.ContainsKey(id) || !roomBookings.ContainsKey(id))
+            return;
+
+        var todaysBooking = roomBookings[id].FirstOrDefault(bp => 
+            DateTime.Today >= bp.StartDate.Date && DateTime.Today <= bp.EndDate.Date);
+
+        if (todaysBooking != null)
+        {
+            rooms[id].setState(todaysBooking.BookingState);
+            rooms[id].setCurGuest(todaysBooking.Guests);
+        }
+        else
+        {
+            rooms[id].setState(0); // Free
+            rooms[id].setCurGuest(Array.Empty<Person>());
+        }
+    }
+
+    private string GetStateText(uint state)
+    {
+        return state switch
+        {
+            0 => "Free",
+            1 => "Occupied",
+            2 => "Deposited",
+            3 => "Maintenance",
+            _ => "Unknown"
+        };
+    }
 }

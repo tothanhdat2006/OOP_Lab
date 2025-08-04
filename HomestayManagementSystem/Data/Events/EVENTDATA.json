@@ -11,6 +11,15 @@
         "day": 24,
         "month": 7,
         "year": 2025
+      },
+      "guestInfo": {
+        "name": "Nguyen Van A",
+        "age": 28,
+        "sex": false,
+        "mail": "nguyenvana@email.com",
+        "CCCD": "123456789012",
+        "phoneNumber": "0901234567",
+        "address": "123 Main St, Ho Chi Minh City"
       }
     },
     {
@@ -24,6 +33,15 @@
         "day": 23,
         "month": 7,
         "year": 2025
+      },
+      "guestInfo": {
+        "name": "Tran Thi B",
+        "age": 25,
+        "sex": true,
+        "mail": "tranthib@email.com",
+        "CCCD": "987654321098",
+        "phoneNumber": "0909876543",
+        "address": "456 Second St, Ha Noi"
       }
     },
     {
@@ -37,6 +55,15 @@
         "day": 28,
         "month": 7,
         "year": 2025
+      },
+      "guestInfo": {
+        "name": "Le Van C",
+        "age": 35,
+        "sex": false,
+        "mail": "levanc@email.com",
+        "CCCD": "456789123456",
+        "phoneNumber": "0912345678",
+        "address": "789 Third Ave, Da Nang"
       }
     },
     {
@@ -50,6 +77,15 @@
         "day": 27,
         "month": 7,
         "year": 2025
+      },
+      "guestInfo": {
+        "name": "Pham Thi D",
+        "age": 30,
+        "sex": true,
+        "mail": "phamthid@email.com",
+        "CCCD": "321654987321",
+        "phoneNumber": "0987654321",
+        "address": "321 Fourth Blvd, Can Tho"
       }
     }
   ]
