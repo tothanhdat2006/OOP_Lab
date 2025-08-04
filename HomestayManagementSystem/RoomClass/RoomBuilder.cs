@@ -102,35 +102,35 @@ public class RoomDirector
         this.builder = builder;
     }
 
-    public void customConstruct(int param1, int param2, int param3, int param4, ulong param5, RoomType roomType = RoomType.Standard)
+    public void customConstruct(int bedRoomOpt, int balconyOpt, int kitchenOpt, int bathTub, ulong price, RoomType roomType = RoomType.Standard)
     {
         builder.reset();
         builder.setRoomType(roomType);
 
         // param1 for bedroom option
-        if (param1 == 0) 
+        if (bedRoomOpt == 0) 
             builder.buildSmallBedroom();
-        else if (param1 == 1) 
+        else if (bedRoomOpt == 1) 
             builder.buildMediumBedroom();
-        else if (param1 == 2)
+        else if (bedRoomOpt == 2)
             builder.buildLargeBedroom();
 
         // param2 for balcony option
-        if (param2 == 1)
+        if (balconyOpt == 1)
             builder.buildBalcony();
 
         // param3 for kitchen option
-        if (param3 == 1)
+        if (kitchenOpt == 1)
             builder.buildKitchen();
 
         // param4 for bathtub option
-        if (param4 == 0)
+        if (bathTub == 0)
             builder.buildToiletNoBathtub();
         else 
             builder.buildToiletHaveBathtub();
 
         // param5 for setting price
-        builder.setPrice(param5);
+        builder.setPrice(price);
     }
     
     public void ConstructPersonalRoom()
