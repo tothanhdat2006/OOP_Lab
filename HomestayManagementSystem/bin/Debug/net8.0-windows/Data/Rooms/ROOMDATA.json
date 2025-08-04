@@ -1,0 +1,67 @@
+{
+  "rooms": [
+    {
+      "ID": 101,
+      "numBeds": 2,
+      "haveBalcony": true,
+      "haveKitchen": false,
+      "haveBathtub": true,
+      "capacity": 4,
+      "price": 500000,
+      "state": 1,
+      "curGuest": [
+        {
+          "name": "asd",
+          "age": 6,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        },
+        {
+          "name": "aasdd",
+          "age": 7,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        }
+      ]
+    },
+    {
+      "ID": 102,
+      "numBeds": 2,
+      "haveBalcony": true,
+      "haveKitchen": false,
+      "haveBathtub": true,
+      "capacity": 4,
+      "price": 500000,
+      "state": 2,
+      "curGuest": []
+    },
+    {
+      "ID": 201,
+      "numBeds": 2,
+      "haveBalcony": true,
+      "haveKitchen": false,
+      "haveBathtub": true,
+      "capacity": 4,
+      "price": 500000,
+      "state": 0,
+      "curGuest": []
+    },
+    {
+      "ID": 202,
+      "numBeds": 2,
+      "haveBalcony": true,
+      "haveKitchen": false,
+      "haveBathtub": true,
+      "capacity": 4,
+      "price": 500000,
+      "state": 0,
+      "curGuest": []
+    }
+  ]
+}

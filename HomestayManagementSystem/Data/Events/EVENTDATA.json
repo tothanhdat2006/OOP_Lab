@@ -1,0 +1,56 @@
+﻿{
+  "events": [
+    {
+      "roomId": 101,
+      "startDate": {
+        "day": 22,
+        "month": 7,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 24,
+        "month": 7,
+        "year": 2025
+      }
+    },
+    {
+      "roomId": 102,
+      "startDate": {
+        "day": 23,
+        "month": 7,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 23,
+        "month": 7,
+        "year": 2025
+      }
+    },
+    {
+      "roomId": 201,
+      "startDate": {
+        "day": 25,
+        "month": 7,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 28,
+        "month": 7,
+        "year": 2025
+      }
+    },
+    {
+      "roomId": 202,
+      "startDate": {
+        "day": 26,
+        "month": 7,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 27,
+        "month": 7,
+        "year": 2025
+      }
+    }
+  ]
+}

@@ -1,8 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "oLLZ/DmP2qE=",
+  "dgSpecHash": "n8X/8I7ww7E=",
   "success": true,
-  "projectFilePath": "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "projectFilePath": "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\To Thanh Dat\\.nuget\\packages\\ini-parser\\2.5.2\\ini-parser.2.5.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'ini-parser 2.5.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0-windows7.0'. This package may not be fully compatible with your project.",
+      "projectPath": "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
+      "libraryId": "ini-parser",
+      "targetGraphs": [
+        "net8.0-windows7.0"
+      ]
+    }
+  ]
 }

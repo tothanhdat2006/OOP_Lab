@@ -42,7 +42,7 @@
             signin_button.Name = "signin_button";
             signin_button.Size = new Size(150, 58);
             signin_button.TabIndex = 3;
-            signin_button.Text = "Đăng nhập";
+            signin_button.Text = "Sign in";
             signin_button.UseVisualStyleBackColor = true;
             signin_button.Click += signin_button_Click;
             // 
@@ -60,9 +60,9 @@
             username_label.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             username_label.Location = new Point(233, 256);
             username_label.Name = "username_label";
-            username_label.Size = new Size(115, 32);
+            username_label.Size = new Size(121, 32);
             username_label.TabIndex = 2;
-            username_label.Text = "Tài khoản";
+            username_label.Text = "Username";
             // 
             // password_label
             // 
@@ -70,9 +70,9 @@
             password_label.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             password_label.Location = new Point(233, 296);
             password_label.Name = "password_label";
-            password_label.Size = new Size(115, 32);
+            password_label.Size = new Size(111, 32);
             password_label.TabIndex = 4;
-            password_label.Text = "Mật khẩu";
+            password_label.Text = "Password";
             // 
             // password_textBox
             // 
@@ -88,7 +88,7 @@
             signup_button.Name = "signup_button";
             signup_button.Size = new Size(150, 58);
             signup_button.TabIndex = 5;
-            signup_button.Text = "Đăng ký";
+            signup_button.Text = "Sign up";
             signup_button.UseVisualStyleBackColor = true;
             // 
             // mainMenu
@@ -103,8 +103,8 @@
             Controls.Add(username_textBox);
             Controls.Add(signin_button);
             Name = "mainMenu";
-            Text = "Giao diện chính";
-            Load += Form1_Load;
+            Text = "Homestay Management System";
+            Load += mainMenu_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -112,7 +112,7 @@
         #endregion
 
         private Button signin_button;
-        private TextBox username_textBox;
+        public TextBox username_textBox;
         private Label username_label;
         private Label password_label;
         private TextBox password_textBox;

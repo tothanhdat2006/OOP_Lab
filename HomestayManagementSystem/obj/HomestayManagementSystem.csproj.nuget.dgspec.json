@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj": {}
+    "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj": {}
   },
   "projects": {
-    "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj": {
+    "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
+        "projectUniqueName": "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
         "projectName": "HomestayManagementSystem",
-        "projectPath": "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
+        "projectPath": "D:\\Project\\OOP_Lab\\OOP_Lab\\HomestayManagementSystem\\HomestayManagementSystem.csproj",
         "packagesPath": "C:\\Users\\To Thanh Dat\\.nuget\\packages\\",
         "outputPath": "D:\\Project\\OOP_Lab\\OOP_lab\\HomestayManagementSystem\\obj\\",
         "projectStyle": "PackageReference",
@@ -49,6 +49,12 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "ini-parser": {
+              "target": "Package",
+              "version": "[2.5.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

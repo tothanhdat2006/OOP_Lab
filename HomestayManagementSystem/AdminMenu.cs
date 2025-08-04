@@ -45,9 +45,22 @@ namespace HomestayManagementSystem
 
         private void returnMainMenu_button_Click(object sender, EventArgs e)
         {
-            var mainMenu_Form = (mainMenu)Tag;
+            var mainMenu_Form = Tag as mainMenu;
             mainMenu_Form.Show();
             Close();
+        }
+
+        private void AdminMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var mainMenu_Form = Tag as mainMenu;
+            if (mainMenu_Form != null)
+            {
+                mainMenu_Form.Show();
+            }
+            else
+            {
+                Application.Exit(); // If mainMenu_Form is null, exit the application
+            }
         }
     }
 }

@@ -31,14 +31,10 @@
             label1 = new Label();
             bookRoom_flowLayoutPanel = new FlowLayoutPanel();
             label2 = new Label();
-            filter_flowLayoutPanel = new FlowLayoutPanel();
-            label3 = new Label();
-            checkedListBox1 = new CheckedListBox();
-            label4 = new Label();
-            dateTimePicker1 = new DateTimePicker();
-            label5 = new Label();
-            dateTimePicker2 = new DateTimePicker();
             returnAdminMenu_button = new Button();
+            filterCheckedList = new CheckedListBox();
+            label3 = new Label();
+            filter_flowLayoutPanel = new FlowLayoutPanel();
             bookRoom_flowLayoutPanel.SuspendLayout();
             filter_flowLayoutPanel.SuspendLayout();
             SuspendLayout();
@@ -47,11 +43,11 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(338, 0);
+            label1.Location = new Point(425, 0);
             label1.Name = "label1";
-            label1.Size = new Size(422, 45);
+            label1.Size = new Size(178, 45);
             label1.TabIndex = 0;
-            label1.Text = "Chỉnh sửa thông tin phòng";
+            label1.Text = "Room info";
             // 
             // bookRoom_flowLayoutPanel
             // 
@@ -71,74 +67,9 @@
             label2.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.Location = new Point(3, 0);
             label2.Name = "label2";
-            label2.Size = new Size(197, 30);
+            label2.Size = new Size(160, 30);
             label2.TabIndex = 0;
-            label2.Text = "\t\t\t\t\t\tKhung chọn phòng";
-            // 
-            // filter_flowLayoutPanel
-            // 
-            filter_flowLayoutPanel.BorderStyle = BorderStyle.Fixed3D;
-            filter_flowLayoutPanel.Controls.Add(label3);
-            filter_flowLayoutPanel.Controls.Add(checkedListBox1);
-            filter_flowLayoutPanel.Controls.Add(label4);
-            filter_flowLayoutPanel.Controls.Add(dateTimePicker1);
-            filter_flowLayoutPanel.Controls.Add(label5);
-            filter_flowLayoutPanel.Controls.Add(dateTimePicker2);
-            filter_flowLayoutPanel.Location = new Point(833, 44);
-            filter_flowLayoutPanel.Name = "filter_flowLayoutPanel";
-            filter_flowLayoutPanel.Size = new Size(247, 673);
-            filter_flowLayoutPanel.TabIndex = 2;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(3, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(46, 30);
-            label3.TabIndex = 0;
-            label3.Text = "Lọc";
-            // 
-            // checkedListBox1
-            // 
-            checkedListBox1.FormattingEnabled = true;
-            checkedListBox1.Items.AddRange(new object[] { "Phòng trống", "Phòng đã cọc", "Phòng đang ở" });
-            checkedListBox1.Location = new Point(3, 33);
-            checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(234, 58);
-            checkedListBox1.TabIndex = 1;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(3, 94);
-            label4.Name = "label4";
-            label4.Size = new Size(53, 15);
-            label4.TabIndex = 3;
-            label4.Text = "Từ ngày:";
-            // 
-            // dateTimePicker1
-            // 
-            dateTimePicker1.Location = new Point(3, 112);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(203, 23);
-            dateTimePicker1.TabIndex = 2;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(3, 138);
-            label5.Name = "label5";
-            label5.Size = new Size(60, 15);
-            label5.TabIndex = 5;
-            label5.Text = "Đến ngày:";
-            // 
-            // dateTimePicker2
-            // 
-            dateTimePicker2.Location = new Point(3, 156);
-            dateTimePicker2.Name = "dateTimePicker2";
-            dateTimePicker2.Size = new Size(203, 23);
-            dateTimePicker2.TabIndex = 4;
+            label2.Text = "Room selection";
             // 
             // returnAdminMenu_button
             // 
@@ -146,9 +77,40 @@
             returnAdminMenu_button.Name = "returnAdminMenu_button";
             returnAdminMenu_button.Size = new Size(75, 25);
             returnAdminMenu_button.TabIndex = 3;
-            returnAdminMenu_button.Text = "Quay về";
+            returnAdminMenu_button.Text = "Back";
             returnAdminMenu_button.UseVisualStyleBackColor = true;
             returnAdminMenu_button.Click += returnAdminMenu_button_Click;
+            // 
+            // filterCheckedList
+            // 
+            filterCheckedList.CheckOnClick = true;
+            filterCheckedList.FormattingEnabled = true;
+            filterCheckedList.Items.AddRange(new object[] { "Free", "Occupied", "Deposited" });
+            filterCheckedList.Location = new Point(3, 33);
+            filterCheckedList.Name = "filterCheckedList";
+            filterCheckedList.Size = new Size(234, 58);
+            filterCheckedList.TabIndex = 1;
+            filterCheckedList.SelectedIndexChanged += filterCheckedList_SelectedIndexChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.Location = new Point(3, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(61, 30);
+            label3.TabIndex = 0;
+            label3.Text = "Filter";
+            // 
+            // filter_flowLayoutPanel
+            // 
+            filter_flowLayoutPanel.BorderStyle = BorderStyle.Fixed3D;
+            filter_flowLayoutPanel.Controls.Add(label3);
+            filter_flowLayoutPanel.Controls.Add(filterCheckedList);
+            filter_flowLayoutPanel.Location = new Point(833, 44);
+            filter_flowLayoutPanel.Name = "filter_flowLayoutPanel";
+            filter_flowLayoutPanel.Size = new Size(247, 673);
+            filter_flowLayoutPanel.TabIndex = 2;
             // 
             // Admin_AllRoomMenu
             // 
@@ -174,13 +136,9 @@
         private Label label1;
         private FlowLayoutPanel bookRoom_flowLayoutPanel;
         private Label label2;
-        private FlowLayoutPanel filter_flowLayoutPanel;
-        private Label label3;
-        private CheckedListBox checkedListBox1;
-        private Label label4;
-        private DateTimePicker dateTimePicker1;
-        private Label label5;
-        private DateTimePicker dateTimePicker2;
         private Button returnAdminMenu_button;
+        private CheckedListBox filterCheckedList;
+        private Label label3;
+        private FlowLayoutPanel filter_flowLayoutPanel;
     }
 }
