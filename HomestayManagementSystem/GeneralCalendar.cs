@@ -250,7 +250,7 @@ namespace HomestayManagementSystem
                                     try
                                     {
                                         var room = roomList.getRoom((uint)roomId);
-                                        room.setCurGuest(allGuests.ToArray());
+                                        room.setCurGuest(allGuests.ToArray()); // Use actual guest list
                                     }
                                     catch (ArgumentException)
                                     {
@@ -435,7 +435,7 @@ namespace HomestayManagementSystem
                         AutoSize = false
                     };
 
-                    string tooltipText = $"Room {roomId}\nState: {availabilityInfo.StateText}\nGuests: {availabilityInfo.GuestCount}\nDate: {currentDay:dd/MM/yyyy}";
+                    string tooltipText = $"Room {roomId}\nState: {availabilityInfo.StateText}\nDate: {currentDay:dd/MM/yyyy}";
                     if (!string.IsNullOrEmpty(availabilityInfo.GuestNames))
                     {
                         tooltipText += $"\nGuest Names: {availabilityInfo.GuestNames}";
@@ -558,24 +558,10 @@ namespace HomestayManagementSystem
                     BackColor = Color.Transparent
                 };
 
-                // Current occupancy using polymorphic methods
-                string occupancyText = availabilityInfo.GuestCount == 0
-                    ? "👤 No current guests"
-                    : $"👥 {availabilityInfo.GuestCount} guest(s)\n{room.getGuestNames()}"; // Polymorphic method
-
-                Label occupancyLabel = new Label
-                {
-                    Text = occupancyText,
-                    Location = new Point(5, 75),
-                    Size = new Size(roomPanel.Width - 10, 40),
-                    Font = new Font("Segoe UI", 7, FontStyle.Regular),
-                    ForeColor = Color.DarkBlue,
-                    BackColor = Color.Transparent
-                };
+                // Current occupancy display removed
 
                 roomPanel.Controls.Add(headerLabel);
                 roomPanel.Controls.Add(detailsLabel);
-                roomPanel.Controls.Add(occupancyLabel);
 
                 // Enhanced tooltip
                 string tooltipText = $"Room {roomId} Details:\n" +
@@ -584,9 +570,7 @@ namespace HomestayManagementSystem
                                    $"Beds: {room.getNumBeds()} | Capacity: {room.getCapacity()}\n" +
                                    $"Balcony: {(room.getHaveBalcony() ? "Yes" : "No")}\n" +
                                    $"Kitchen: {(room.getHaveKitchen() ? "Yes" : "No")}\n" +
-                                   $"Bathtub: {(room.getHaveBathtub() ? "Yes" : "No")}\n" +
-                                   $"Current Guests: {availabilityInfo.GuestCount}\n" +
-                                   (!string.IsNullOrEmpty(availabilityInfo.GuestNames) ? $"Guest Names: {availabilityInfo.GuestNames}" : "");
+                                   $"Bathtub: {(room.getHaveBathtub() ? "Yes" : "No")}";
 
                 toolTip.SetToolTip(roomPanel, tooltipText);
 

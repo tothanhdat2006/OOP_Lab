@@ -147,30 +147,17 @@ namespace HomestayManagementSystem
                 Label maxPersonsLabel = new Label { Text = $"Max capacity: {roomData.getMaxPersons()} people", Left = 20, Top = 170, AutoSize = true };
                 Label amenitiesLabel = new Label { Text = $"Amenities: {roomData.getAmenitiesText()}", Left = 20, Top = 200, AutoSize = true, Width = 400 };
 
-                // Get guest information from events instead of room curGuest
-                var roomAvailability = roomList.getRoomAvailabilityInfo(uint.Parse(roomData.getID()), DateTime.Today, DateTime.Today);
-
-                Label guestCountLabel = new Label { Text = $"Current guests: {roomAvailability.GuestCount}", Left = 20, Top = 230, AutoSize = true };
-
-                // Guest names with proper handling from events
-                Label guestNamesLabel = new Label
-                {
-                    Text = $"Guest names: {(string.IsNullOrEmpty(roomAvailability.GuestNames) ? "None" : roomAvailability.GuestNames)}",
-                    Left = 20,
-                    Top = 260,
-                    AutoSize = true,
-                    Width = 400
-                };
+                // Guest information display removed
 
                 // Room type information
-                Label roomTypeLabel = new Label { Text = $"Room type: {roomData.getRoomType()}", Left = 20, Top = 290, AutoSize = true };
+                Label roomTypeLabel = new Label { Text = $"Room type: {roomData.getRoomType()}", Left = 20, Top = 230, AutoSize = true };
 
                 // Current event information - Fixed to use the room's actual state instead of availability info
                 Label eventInfoLabel = new Label
                 {
                     Text = $"Booking status: {roomStatusText}",  // Use the same status text as the main display
                     Left = 20,
-                    Top = 320,
+                    Top = 260,
                     AutoSize = true,
                     Font = new Font("Arial", 10, FontStyle.Bold),
                     ForeColor = roomData.getState() == 0 ? Color.Green : Color.Red  // Use room's actual state
@@ -219,8 +206,6 @@ namespace HomestayManagementSystem
                 roomInfoForm.Controls.Add(roomBedsLabel);
                 roomInfoForm.Controls.Add(maxPersonsLabel);
                 roomInfoForm.Controls.Add(amenitiesLabel);
-                roomInfoForm.Controls.Add(guestCountLabel);
-                roomInfoForm.Controls.Add(guestNamesLabel);
                 roomInfoForm.Controls.Add(roomTypeLabel);
                 roomInfoForm.Controls.Add(eventInfoLabel);
                 roomInfoForm.Controls.Add(closeButton);
@@ -274,19 +259,7 @@ namespace HomestayManagementSystem
                 ForeColor = Color.DarkBlue
             };
 
-            // Guest info from availability info (events)
-            var roomAvailability = roomList.getRoomAvailabilityInfo(uint.Parse(roomId), DateTime.Today, DateTime.Today);
-            Label guestLabel = new Label
-            {
-                Text = $"Guests: {roomAvailability.GuestCount} | {roomAvailability.GuestNames}",
-                AutoSize = false,
-                Height = 20,
-                Dock = DockStyle.Top,
-                Font = new Font("Arial", 7, FontStyle.Regular),
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.Transparent,
-                ForeColor = Color.DarkGreen
-            };
+            // Guest information display removed
 
             Button moreInfo_button = new Button
             {
@@ -306,7 +279,6 @@ namespace HomestayManagementSystem
 
             panel.Controls.Add(roomName_label);
             panel.Controls.Add(amenitiesLabel);
-            panel.Controls.Add(guestLabel);
             panel.Controls.Add(moreInfo_button);
             return panel;
         }

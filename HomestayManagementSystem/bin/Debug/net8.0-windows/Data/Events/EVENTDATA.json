@@ -12,6 +12,7 @@
         "month": 7,
         "year": 2025
       },
+      "guestCount": 3,
       "guestInfo": {
         "name": "Nguyen Van A",
         "age": 28,
@@ -54,6 +55,7 @@
         "month": 7,
         "year": 2025
       },
+      "guestCount": 1,
       "guestInfo": {
         "name": "Tran Thi B",
         "age": 25,
@@ -77,6 +79,7 @@
         "month": 7,
         "year": 2025
       },
+      "guestCount": 1,
       "guestInfo": {
         "name": "Le Van C",
         "age": 35,
@@ -100,6 +103,7 @@
         "month": 7,
         "year": 2025
       },
+      "guestCount": 1,
       "guestInfo": {
         "name": "Pham Thi D",
         "age": 30,
@@ -112,17 +116,18 @@
       "additionalGuests": []
     },
     {
-      "roomId": 102,
+      "roomId": 201,
       "startDate": {
         "day": 7,
         "month": 8,
         "year": 2025
       },
       "endDate": {
-        "day": 14,
+        "day": 7,
         "month": 8,
         "year": 2025
       },
+      "guestCount": 4,
       "guestInfo": {
         "name": "Test User",
         "age": 19,
@@ -135,17 +140,18 @@
       "additionalGuests": []
     },
     {
-      "roomId": 201,
+      "roomId": 202,
       "startDate": {
         "day": 7,
         "month": 8,
         "year": 2025
       },
       "endDate": {
-        "day": 8,
+        "day": 7,
         "month": 8,
         "year": 2025
       },
+      "guestCount": 4,
       "guestInfo": {
         "name": "Test User",
         "age": 19,

@@ -884,7 +884,6 @@ namespace HomestayManagementSystem
 
                 string displayInfo;
                 string amenitiesText;
-                string guestCountText;
                 string roomTypeText;
 
                 try
@@ -905,14 +904,7 @@ namespace HomestayManagementSystem
                     amenitiesText = GetBasicAmenitiesText(roomData);
                 }
 
-                try
-                {
-                    guestCountText = roomData.getCurrentGuestCount().ToString();
-                }
-                catch (Exception)
-                {
-                    guestCountText = roomData.getCurGuest()?.Length.ToString() ?? "0";
-                }
+                // Guest count information display removed
 
                 try
                 {
@@ -941,8 +933,7 @@ namespace HomestayManagementSystem
                 Label roomBedsLabel = new Label { Text = $"Number of beds: {roomData.getNumBeds()}", Left = 20, Top = 140, AutoSize = true };
                 Label maxPersonsLabel = new Label { Text = $"Max capacity: {roomData.getMaxPersons()} people", Left = 20, Top = 170, AutoSize = true };
                 Label amenitiesLabel = new Label { Text = $"Amenities: {amenitiesText}", Left = 20, Top = 200, AutoSize = true, Width = 400 };
-                Label guestCountLabel = new Label { Text = $"Current guests: {guestCountText}", Left = 20, Top = 230, AutoSize = true };
-                Label roomTypeLabel = new Label { Text = $"Room type: {roomTypeText}", Left = 20, Top = 260, AutoSize = true };
+                Label roomTypeLabel = new Label { Text = $"Room type: {roomTypeText}", Left = 20, Top = 230, AutoSize = true };
 
                 // Create buttons
                 Button closeButton = new Button { Text = "Close", Left = 50, Top = 360, Width = 100, Height = 50 };
@@ -1001,7 +992,6 @@ namespace HomestayManagementSystem
                 roomInfoForm.Controls.Add(roomBedsLabel);
                 roomInfoForm.Controls.Add(maxPersonsLabel);
                 roomInfoForm.Controls.Add(amenitiesLabel);
-                roomInfoForm.Controls.Add(guestCountLabel);
                 roomInfoForm.Controls.Add(roomTypeLabel);
                 roomInfoForm.Controls.Add(closeButton);
                 roomInfoForm.Controls.Add(bookRoomButton);
@@ -1364,7 +1354,7 @@ namespace HomestayManagementSystem
                     Directory.CreateDirectory(Path.GetDirectoryName(eventDataPath));
                 }
 
-                // Create new event object with primary guest and additional guests field
+                // Create new event object
                 var newEvent = new
                 {
                     roomId = (int)roomId,
@@ -1439,7 +1429,7 @@ namespace HomestayManagementSystem
                         string iniPath = $"Data/Users/{username}.ini";
                         if (System.IO.File.Exists(iniPath))
                         {
-                            var parser = new IniParser.FileIniDataParser();
+                            var parser = new FileIniDataParser();
                             IniParser.Model.IniData data = parser.ReadFile(iniPath);
                             var customerSection = data["Customer"];
 

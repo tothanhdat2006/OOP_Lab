@@ -141,7 +141,6 @@ public class RoomList : IRoomList
                 IsAvailable = false,
                 BookingStart = activeBooking.StartDate,
                 BookingEnd = activeBooking.EndDate,
-                GuestCount = activeBooking.Guests.Length,
                 GuestNames = string.Join(", ", activeBooking.Guests.Select(g => g.name)),
                 State = activeBooking.BookingState,
                 StateText = GetStateText(activeBooking.BookingState),
@@ -155,7 +154,6 @@ public class RoomList : IRoomList
             IsAvailable = true,
             State = 0,
             StateText = "Free",
-            GuestCount = 0,
             GuestNames = "",
             DisplayInfo = room.getDisplayInfo(),
             AmenitiesText = room.getAmenitiesText()
@@ -181,9 +179,7 @@ public class RoomList : IRoomList
             {
                 allGuests.Add(evt.guestInfo.Value);
 
-                // Note: Additional guests would need to be loaded from the expanded event structure
-                // This would require modifying the Event class to support multiple guests
-                // For now, we'll work with the primary guest
+                // Note: Event data contains primary guest and additional guests
             }
 
             var booking = new BookingPeriod

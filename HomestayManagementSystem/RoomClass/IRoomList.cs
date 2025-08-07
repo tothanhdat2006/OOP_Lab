@@ -25,7 +25,6 @@ public class RoomAvailabilityInfo
     public bool IsAvailable { get; set; }
     public DateTime? BookingStart { get; set; }
     public DateTime? BookingEnd { get; set; }
-    public int GuestCount { get; set; }
     public string GuestNames { get; set; } = "";
     public uint State { get; set; }
     public string StateText { get; set; } = "";

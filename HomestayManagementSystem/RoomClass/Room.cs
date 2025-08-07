@@ -112,24 +112,9 @@ public class Room : IRoom
 		return amenities.Count > 0 ? string.Join(" | ", amenities) : "🏠 Basic room";
 	}
 
-	public virtual int getCurrentGuestCount()
-	{
-		return curGuest?.Length ?? 0;
-	}
-
-	public virtual string getGuestNames()
-	{
-		if (curGuest == null || curGuest.Length == 0)
-			return "";
-		
-		var names = curGuest.Select(g => g.name).Where(n => !string.IsNullOrEmpty(n));
-		var joinedNames = string.Join(", ", names);
-		return joinedNames.Length > 20 ? joinedNames.Substring(0, 20) + "..." : joinedNames;
-	}
-
 	public virtual string getFullDescription()
 	{
-		return $"{getDisplayInfo()}\n{getAmenitiesText()}\nGuests: {getCurrentGuestCount()}";
+		return $"{getDisplayInfo()}\n{getAmenitiesText()}";
 	}
 
 	private string getStateText(uint state)
@@ -200,7 +185,7 @@ public class Room : IRoom
 				state = roomElem.GetProperty("state").GetUInt32()
 			};
 
-			if (roomElem.TryGetProperty("curGuest", out var guestsElem))
+			if (roomElem.TryGetProperty("additionalGuests", out var guestsElem))
 			{
 				var guests = new List<Person>();
 				foreach (var guestElem in guestsElem.EnumerateArray())
