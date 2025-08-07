@@ -8,27 +8,7 @@
       "haveBathtub": true,
       "capacity": 4,
       "price": 500000,
-      "state": 1,
-      "curGuest": [
-        {
-          "name": "asd",
-          "age": 6,
-          "sex": false,
-          "mail": "as@gmail.com",
-          "CCCD": "0001",
-          "phoneNumber": "0999",
-          "address": "HCM"
-        },
-        {
-          "name": "aasdd",
-          "age": 7,
-          "sex": false,
-          "mail": "as@gmail.com",
-          "CCCD": "0001",
-          "phoneNumber": "0999",
-          "address": "HCM"
-        }
-      ]
+      "state": 0
     },
     {
       "ID": 102,
@@ -38,8 +18,7 @@
       "haveBathtub": true,
       "capacity": 4,
       "price": 500000,
-      "state": 2,
-      "curGuest": []
+      "state": 1
     },
     {
       "ID": 201,
@@ -49,8 +28,7 @@
       "haveBathtub": true,
       "capacity": 4,
       "price": 500000,
-      "state": 0,
-      "curGuest": []
+      "state": 2
     },
     {
       "ID": 202,
@@ -60,8 +38,7 @@
       "haveBathtub": true,
       "capacity": 4,
       "price": 500000,
-      "state": 0,
-      "curGuest": []
+      "state": 0
     }
   ]
 }

@@ -20,7 +20,27 @@
         "CCCD": "123456789012",
         "phoneNumber": "0901234567",
         "address": "123 Main St, Ho Chi Minh City"
-      }
+      },
+      "additionalGuests": [
+        {
+          "name": "asd",
+          "age": 6,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        },
+        {
+          "name": "aasdd",
+          "age": 7,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        }
+      ]
     },
     {
       "roomId": 102,
@@ -42,7 +62,8 @@
         "CCCD": "987654321098",
         "phoneNumber": "0909876543",
         "address": "456 Second St, Ha Noi"
-      }
+      },
+      "additionalGuests": []
     },
     {
       "roomId": 201,
@@ -64,7 +85,8 @@
         "CCCD": "456789123456",
         "phoneNumber": "0912345678",
         "address": "789 Third Ave, Da Nang"
-      }
+      },
+      "additionalGuests": []
     },
     {
       "roomId": 202,
@@ -86,7 +108,8 @@
         "CCCD": "321654987321",
         "phoneNumber": "0987654321",
         "address": "321 Fourth Blvd, Can Tho"
-      }
+      },
+      "additionalGuests": []
     }
   ]
 }

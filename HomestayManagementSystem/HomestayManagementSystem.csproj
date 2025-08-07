@@ -12,4 +12,10 @@
     <PackageReference Include="ini-parser" Version="2.5.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\Rooms\201.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

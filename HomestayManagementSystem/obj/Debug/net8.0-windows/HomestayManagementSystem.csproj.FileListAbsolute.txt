@@ -23,3 +23,4 @@ D:\Project\OOP_Lab\OOP_lab\HomestayManagementSystem\obj\Debug\net8.0-windows\Hom
 D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\obj\Debug\net8.0-windows\HomestayManagementSystem.csproj.AssemblyReference.cache
 D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\bin\Debug\net8.0-windows\INIFileParser.dll
 D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\obj\Debug\net8.0-windows\Homestay.7F11D637.Up2Date
+D:\Project\OOP_Lab\OOP_Lab\HomestayManagementSystem\bin\Debug\net8.0-windows\Data\Rooms\201.jpg

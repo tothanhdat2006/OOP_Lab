@@ -174,12 +174,24 @@ public class RoomList : IRoomList
 
         foreach (var evt in events.Where(e => e.roomId == (int)id))
         {
+            // Get all guests for this event from the event data
+            var allGuests = new List<Person>();
+
+            if (evt.guestInfo.HasValue)
+            {
+                allGuests.Add(evt.guestInfo.Value);
+
+                // Note: Additional guests would need to be loaded from the expanded event structure
+                // This would require modifying the Event class to support multiple guests
+                // For now, we'll work with the primary guest
+            }
+
             var booking = new BookingPeriod
             {
                 StartDate = new DateTime(evt.startDate.year, evt.startDate.month, evt.startDate.day),
                 EndDate = new DateTime(evt.endDate.year, evt.endDate.month, evt.endDate.day),
                 BookingState = evt.type == "Occupied" ? (uint)1 : (uint)2,
-                Guests = evt.guestInfo.HasValue ? new[] { evt.guestInfo.Value } : Array.Empty<Person>()
+                Guests = allGuests.ToArray()
             };
             roomBookings[id].Add(booking);
         }

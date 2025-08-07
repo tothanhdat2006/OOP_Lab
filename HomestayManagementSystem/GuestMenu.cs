@@ -1,5 +1,6 @@
 ﻿using IniParser;
 using IniParser.Model;
+using System.Text.Json;
 
 namespace HomestayManagementSystem
 {
@@ -590,7 +591,7 @@ namespace HomestayManagementSystem
                 {
                     Text = isDeposit ? $"Deposit {displayInfo}" : $"Book {displayInfo}",
                     Width = 500,
-                    Height = 550,
+                    Height = 650, // Increased height for date range fields
                     StartPosition = FormStartPosition.CenterParent
                 };
 
@@ -625,16 +626,62 @@ namespace HomestayManagementSystem
                     ForeColor = Color.DarkBlue
                 };
 
+                // Date range section
+                Label dateRangeLabel = new Label
+                {
+                    Text = "Booking Date Range:",
+                    Left = 20,
+                    Top = 110,
+                    AutoSize = true,
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    ForeColor = Color.DarkGreen
+                };
+
+                // Check-in date
+                Label checkInLabel = new Label { Text = "Check-in date:", Left = 20, Top = 140, AutoSize = true };
+                DateTimePicker checkInDatePicker = new DateTimePicker
+                {
+                    Left = 150,
+                    Top = 140,
+                    Width = 200,
+                    Format = DateTimePickerFormat.Short,
+                    MinDate = DateTime.Today, // Cannot book past dates
+                    Value = DateTime.Today
+                };
+
+                // Check-out date
+                Label checkOutLabel = new Label { Text = "Check-out date:", Left = 20, Top = 170, AutoSize = true };
+                DateTimePicker checkOutDatePicker = new DateTimePicker
+                {
+                    Left = 150,
+                    Top = 170,
+                    Width = 200,
+                    Format = DateTimePickerFormat.Short,
+                    MinDate = DateTime.Today.AddDays(1), // Minimum 1 day booking
+                    Value = DateTime.Today.AddDays(1)
+                };
+
+                // Total nights label
+                Label totalNightsLabel = new Label
+                {
+                    Text = "Total nights: 1",
+                    Left = 20,
+                    Top = 200,
+                    AutoSize = true,
+                    Font = new Font("Arial", 9, FontStyle.Regular),
+                    ForeColor = Color.DarkRed
+                };
+
                 // Guest name
-                Label nameLabel = new Label { Text = "Guest name:", Left = 20, Top = 120, AutoSize = true };
-                TextBox nameTextBox = new TextBox { Left = 150, Top = 120, Width = 300 };
+                Label nameLabel = new Label { Text = "Guest name:", Left = 20, Top = 230, AutoSize = true };
+                TextBox nameTextBox = new TextBox { Left = 150, Top = 230, Width = 300 };
 
                 // Age
-                Label ageLabel = new Label { Text = "Age:", Left = 20, Top = 160, AutoSize = true };
+                Label ageLabel = new Label { Text = "Age:", Left = 20, Top = 270, AutoSize = true };
                 NumericUpDown ageNumeric = new NumericUpDown
                 {
                     Left = 150,
-                    Top = 160,
+                    Top = 270,
                     Width = 100,
                     Minimum = 18,
                     Maximum = 100,
@@ -642,15 +689,15 @@ namespace HomestayManagementSystem
                 };
 
                 // CCCD
-                Label cccdLabel = new Label { Text = "CCCD:", Left = 20, Top = 200, AutoSize = true };
-                TextBox cccdTextBox = new TextBox { Left = 150, Top = 200, Width = 300, MaxLength = 12 };
+                Label cccdLabel = new Label { Text = "CCCD:", Left = 20, Top = 310, AutoSize = true };
+                TextBox cccdTextBox = new TextBox { Left = 150, Top = 310, Width = 300, MaxLength = 12 };
 
                 // Birth date
-                Label birthLabel = new Label { Text = "Birth date:", Left = 20, Top = 240, AutoSize = true };
+                Label birthLabel = new Label { Text = "Birth date:", Left = 20, Top = 350, AutoSize = true };
                 DateTimePicker birthDatePicker = new DateTimePicker
                 {
                     Left = 150,
-                    Top = 240,
+                    Top = 350,
                     Width = 200,
                     Format = DateTimePickerFormat.Short,
                     MaxDate = DateTime.Today.AddYears(-18),
@@ -658,11 +705,11 @@ namespace HomestayManagementSystem
                 };
 
                 // Gender
-                Label genderLabel = new Label { Text = "Gender:", Left = 20, Top = 280, AutoSize = true };
+                Label genderLabel = new Label { Text = "Gender:", Left = 20, Top = 390, AutoSize = true };
                 ComboBox genderComboBox = new ComboBox
                 {
                     Left = 150,
-                    Top = 280,
+                    Top = 390,
                     Width = 100,
                     DropDownStyle = ComboBoxStyle.DropDownList
                 };
@@ -670,11 +717,11 @@ namespace HomestayManagementSystem
                 genderComboBox.SelectedIndex = 0;
 
                 // Number of guests
-                Label guestCountLabel = new Label { Text = "Number of guests:", Left = 20, Top = 320, AutoSize = true };
+                Label guestCountLabel = new Label { Text = "Number of guests:", Left = 20, Top = 430, AutoSize = true };
                 NumericUpDown guestCountNumeric = new NumericUpDown
                 {
                     Left = 150,
-                    Top = 320,
+                    Top = 430,
                     Width = 100,
                     Minimum = 1,
                     Maximum = room.getMaxPersons(),
@@ -684,10 +731,11 @@ namespace HomestayManagementSystem
                 // Price info
                 Label priceInfoLabel = new Label
                 {
-                    Text = isDeposit ? $"Deposit amount: 100,000 VND" : $"Total cost: {room.getPrice():N0} VND/night",
+                    Text = isDeposit ? $"Deposit amount: 100,000 VND" : $"Total cost: {room.getPrice():N0} VND/night × 1 night = {room.getPrice():N0} VND",
                     Left = 20,
-                    Top = 360,
+                    Top = 470,
                     AutoSize = true,
+                    Width = 450,
                     Font = new Font("Arial", 10, FontStyle.Bold),
                     ForeColor = isDeposit ? Color.Green : Color.Red
                 };
@@ -697,7 +745,7 @@ namespace HomestayManagementSystem
                 {
                     Text = isDeposit ? "Confirm Deposit" : "Confirm Booking",
                     Left = 100,
-                    Top = 460,
+                    Top = 560,
                     Width = 120,
                     Height = 50,
                     BackColor = Color.LightGreen
@@ -706,7 +754,7 @@ namespace HomestayManagementSystem
                 {
                     Text = "Cancel",
                     Left = 250,
-                    Top = 460,
+                    Top = 560,
                     Width = 120,
                     Height = 50,
                     BackColor = Color.LightCoral
@@ -714,6 +762,39 @@ namespace HomestayManagementSystem
 
                 // Pre-fill user info if available
                 TryPreFillUserInfo(nameTextBox, cccdTextBox, birthDatePicker, ageNumeric);
+
+                // Event handlers for date validation and price calculation
+                EventHandler updateDateCalculations = (sender, e) =>
+                {
+                    try
+                    {
+                        if (checkOutDatePicker.Value <= checkInDatePicker.Value)
+                        {
+                            checkOutDatePicker.Value = checkInDatePicker.Value.AddDays(1);
+                        }
+
+                        int totalNights = (checkOutDatePicker.Value.Date - checkInDatePicker.Value.Date).Days;
+                        totalNightsLabel.Text = $"Total nights: {totalNights}";
+
+                        if (!isDeposit)
+                        {
+                            ulong totalCost = room.getPrice() * (ulong)totalNights;
+                            priceInfoLabel.Text = $"Total cost: {room.getPrice():N0} VND/night × {totalNights} nights = {totalCost:N0} VND";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error updating date calculations: {ex.Message}");
+                    }
+                };
+
+                checkInDatePicker.ValueChanged += updateDateCalculations;
+                checkOutDatePicker.ValueChanged += updateDateCalculations;
+
+                checkInDatePicker.ValueChanged += (sender, e) =>
+                {
+                    checkOutDatePicker.MinDate = checkInDatePicker.Value.AddDays(1);
+                };
 
                 // Validation for CCCD
                 cccdTextBox.KeyPress += (sender, e) =>
@@ -746,8 +827,9 @@ namespace HomestayManagementSystem
                 {
                     try
                     {
-                        ProcessBooking(nameTextBox, ageNumeric, cccdTextBox, birthDatePicker,
-                                      guestCountNumeric, genderComboBox, room, isDeposit, bookingForm);
+                        ProcessBookingWithDateRange(nameTextBox, ageNumeric, cccdTextBox, birthDatePicker,
+                                      guestCountNumeric, genderComboBox, room, isDeposit, bookingForm,
+                                      checkInDatePicker, checkOutDatePicker);
                     }
                     catch (Exception ex)
                     {
@@ -759,6 +841,12 @@ namespace HomestayManagementSystem
                 bookingForm.Controls.Add(titleLabel);
                 bookingForm.Controls.Add(roomInfoLabel);
                 bookingForm.Controls.Add(amenitiesLabel);
+                bookingForm.Controls.Add(dateRangeLabel);
+                bookingForm.Controls.Add(checkInLabel);
+                bookingForm.Controls.Add(checkInDatePicker);
+                bookingForm.Controls.Add(checkOutLabel);
+                bookingForm.Controls.Add(checkOutDatePicker);
+                bookingForm.Controls.Add(totalNightsLabel);
                 bookingForm.Controls.Add(nameLabel);
                 bookingForm.Controls.Add(nameTextBox);
                 bookingForm.Controls.Add(ageLabel);
@@ -782,6 +870,7 @@ namespace HomestayManagementSystem
                 MessageBox.Show($"Error displaying booking form: {ex.Message}");
             }
         }
+
 
         private void ShowRoomDetailInfo(Room roomData)
         {
@@ -1010,9 +1099,9 @@ namespace HomestayManagementSystem
             }
         }
 
-        private void ProcessBooking(TextBox nameTextBox, NumericUpDown ageNumeric, TextBox cccdTextBox,
+        private void ProcessBookingWithDateRange(TextBox nameTextBox, NumericUpDown ageNumeric, TextBox cccdTextBox,
           DateTimePicker birthDatePicker, NumericUpDown guestCountNumeric, ComboBox genderComboBox,
-          Room room, bool isDeposit, Form bookingForm)
+          Room room, bool isDeposit, Form bookingForm, DateTimePicker checkInDatePicker, DateTimePicker checkOutDatePicker)
         {
             try
             {
@@ -1064,6 +1153,22 @@ namespace HomestayManagementSystem
                     return;
                 }
 
+                if (checkOutDatePicker.Value <= checkInDatePicker.Value)
+                {
+                    MessageBox.Show("Check-out date must be after check-in date.", "Invalid Date Range",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    checkOutDatePicker.Focus();
+                    return;
+                }
+
+                // Check room availability for the selected date range
+                if (!IsRoomAvailableForDateRange(room, checkInDatePicker.Value, checkOutDatePicker.Value))
+                {
+                    MessageBox.Show("Room is not available for the selected date range. Please choose different dates.",
+                                    "Room Not Available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Create booking information using safe polymorphic method
                 string displayInfo;
                 try
@@ -1075,7 +1180,13 @@ namespace HomestayManagementSystem
                     displayInfo = $"Room {room.getID()}";
                 }
 
+                int totalNights = (checkOutDatePicker.Value.Date - checkInDatePicker.Value.Date).Days;
+                ulong totalCost = isDeposit ? 100000 : room.getPrice() * (ulong)totalNights;
+
                 string bookingInfo = $"Room: {displayInfo}\n" +
+                   $"Check-in: {checkInDatePicker.Value:dd/MM/yyyy}\n" +
+                   $"Check-out: {checkOutDatePicker.Value:dd/MM/yyyy}\n" +
+                   $"Total nights: {totalNights}\n" +
                    $"Guest name: {nameTextBox.Text}\n" +
                    $"Age: {ageNumeric.Value}\n" +
                    $"CCCD: {cccdTextBox.Text}\n" +
@@ -1083,7 +1194,7 @@ namespace HomestayManagementSystem
                    $"Gender: {genderComboBox.SelectedItem}\n" +
                    $"Number of guests: {guestCountNumeric.Value}\n" +
                    $"Type: {(isDeposit ? "Deposit" : "Booking")}\n" +
-                   $"Amount: {(isDeposit ? "100,000" : room.getPrice().ToString("N0"))} VND";
+                   $"Total amount: {totalCost:N0} VND";
 
                 DialogResult result = MessageBox.Show($"Confirm information:\n\n{bookingInfo}",
                                                     "Confirm Booking",
@@ -1098,10 +1209,17 @@ namespace HomestayManagementSystem
                     var roomFromList = roomList.getRoom(roomId);
                     roomFromList.setState(newStatus);
 
-                    // Save booking information
+                    // Save booking information to both systems
                     bool isFemale = genderComboBox.SelectedItem.ToString() == "Female";
+
+                    // Save to RoomList for current state
                     SaveBookingToRoomList(roomFromList, nameTextBox.Text, cccdTextBox.Text,
                                          birthDatePicker.Value, (uint)guestCountNumeric.Value, isFemale, isDeposit);
+
+                    // Save to EventData.json for calendar synchronization
+                    SaveBookingToEventData(roomId, nameTextBox.Text, cccdTextBox.Text, birthDatePicker.Value,
+                                          (uint)guestCountNumeric.Value, isFemale, checkInDatePicker.Value,
+                                          checkOutDatePicker.Value, isDeposit);
 
                     MessageBox.Show($"{(isDeposit ? "Room deposit" : "Room booking")} successful!\n\n{bookingInfo}",
                                     "Success",
@@ -1116,6 +1234,181 @@ namespace HomestayManagementSystem
             {
                 MessageBox.Show($"Error processing booking: {ex.Message}", "Error",
                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool IsRoomAvailableForDateRange(Room room, DateTime checkIn, DateTime checkOut)
+        {
+            try
+            {
+                uint roomId = uint.Parse(room.getID());
+
+                // Check each day in the range for availability
+                for (DateTime date = checkIn.Date; date < checkOut.Date; date = date.AddDays(1))
+                {
+                    if (!roomList.isRoomAvailableForDate(roomId, date))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking room availability: {ex.Message}");
+                return false;
+            }
+        }
+
+        private void SaveBookingToEventData(uint roomId, string customerName, string cccd, DateTime birthDate,
+                                            uint guestCount, bool isFemale, DateTime checkIn, DateTime checkOut, bool isDeposit)
+        {
+            try
+            {
+                string eventDataPath = @"./Data/Events/EVENTDATA.json";
+
+                // Get additional user info for complete Person object
+                string email = "";
+                string phoneNumber = "";
+                string address = "";
+
+                try
+                {
+                    string username = "";
+                    foreach (Form f in Application.OpenForms)
+                    {
+                        if (f is mainMenu main)
+                        {
+                            username = main.username_textBox.Text.Trim();
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        string iniPath = $"Data/Users/{username}.ini";
+                        if (System.IO.File.Exists(iniPath))
+                        {
+                            var parser = new IniParser.FileIniDataParser();
+                            IniParser.Model.IniData data = parser.ReadFile(iniPath);
+                            var customerSection = data["Customer"];
+
+                            email = customerSection["Email"] ?? "";
+                            phoneNumber = customerSection["Phone"] ?? "";
+                            address = customerSection["HomeAddress"] ?? "";
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not load additional user info: {ex.Message}");
+                }
+
+                // Read existing event data
+                List<object> eventsList = new List<object>();
+
+                if (File.Exists(eventDataPath))
+                {
+                    string existingJson = File.ReadAllText(eventDataPath);
+                    using JsonDocument document = JsonDocument.Parse(existingJson);
+
+                    if (document.RootElement.TryGetProperty("events", out JsonElement eventsArray))
+                    {
+                        foreach (JsonElement eventElement in eventsArray.EnumerateArray())
+                        {
+                            // Convert existing events to objects for preservation
+                            var existingEvent = new
+                            {
+                                roomId = eventElement.GetProperty("roomId").GetInt32(),
+                                startDate = new
+                                {
+                                    day = eventElement.GetProperty("startDate").GetProperty("day").GetInt32(),
+                                    month = eventElement.GetProperty("startDate").GetProperty("month").GetInt32(),
+                                    year = eventElement.GetProperty("startDate").GetProperty("year").GetInt32()
+                                },
+                                endDate = new
+                                {
+                                    day = eventElement.GetProperty("endDate").GetProperty("day").GetInt32(),
+                                    month = eventElement.GetProperty("endDate").GetProperty("month").GetInt32(),
+                                    year = eventElement.GetProperty("endDate").GetProperty("year").GetInt32()
+                                },
+                                guestInfo = eventElement.TryGetProperty("guestInfo", out JsonElement guestElement) ? new
+                                {
+                                    name = guestElement.TryGetProperty("name", out var nameEl) ? nameEl.GetString() : "",
+                                    age = guestElement.TryGetProperty("age", out var ageEl) && ageEl.TryGetUInt32(out uint age) ? age : 0u,
+                                    sex = guestElement.TryGetProperty("sex", out var sexEl) ? sexEl.GetBoolean() : false,
+                                    mail = guestElement.TryGetProperty("mail", out var mailEl) ? mailEl.GetString() : "",
+                                    CCCD = guestElement.TryGetProperty("CCCD", out var cccdEl) ? cccdEl.GetString() : "",
+                                    phoneNumber = guestElement.TryGetProperty("phoneNumber", out var phoneEl) ? phoneEl.GetString() : "",
+                                    address = guestElement.TryGetProperty("address", out var addressEl) ? addressEl.GetString() : ""
+                                } : null,
+                                additionalGuests = eventElement.TryGetProperty("additionalGuests", out JsonElement addGuestsElement) ?
+                                    addGuestsElement.EnumerateArray().Cast<JsonElement>().Select(addGuest => (object)new
+                                    {
+                                        name = addGuest.TryGetProperty("name", out var addNameEl) ? addNameEl.GetString() : "",
+                                        age = addGuest.TryGetProperty("age", out var addAgeEl) && addAgeEl.TryGetUInt32(out uint addAge) ? addAge : 0u,
+                                        sex = addGuest.TryGetProperty("sex", out var addSexEl) ? addSexEl.GetBoolean() : false,
+                                        mail = addGuest.TryGetProperty("mail", out var addMailEl) ? addMailEl.GetString() : "",
+                                        CCCD = addGuest.TryGetProperty("CCCD", out var addCccdEl) ? addCccdEl.GetString() : "",
+                                        phoneNumber = addGuest.TryGetProperty("phoneNumber", out var phoneEl) ? phoneEl.GetString() : "",
+                                        address = addGuest.TryGetProperty("address", out var addAddressEl) ? addAddressEl.GetString() : ""
+                                    }).ToList() : new List<object>()
+                            };
+                            eventsList.Add(existingEvent);
+                        }
+                    }
+                }
+                else
+                {
+                    // Create directory if it doesn't exist
+                    Directory.CreateDirectory(Path.GetDirectoryName(eventDataPath));
+                }
+
+                // Create new event object with primary guest and additional guests field
+                var newEvent = new
+                {
+                    roomId = (int)roomId,
+                    startDate = new
+                    {
+                        day = checkIn.Day,
+                        month = checkIn.Month,
+                        year = checkIn.Year
+                    },
+                    endDate = new
+                    {
+                        day = checkOut.AddDays(-1).Day, // End date is last day of stay
+                        month = checkOut.AddDays(-1).Month,
+                        year = checkOut.AddDays(-1).Year
+                    },
+                    guestInfo = new
+                    {
+                        name = customerName,
+                        age = (uint)(DateTime.Today.Year - birthDate.Year),
+                        sex = isFemale,
+                        mail = email,
+                        CCCD = cccd,
+                        phoneNumber = phoneNumber,
+                        address = address
+                    },
+                    additionalGuests = new List<object>() // For future expansion - additional guests without accounts
+                };
+
+                // Add new event to the list
+                eventsList.Add(newEvent);
+
+                // Create updated event data
+                var updatedEventData = new { events = eventsList };
+
+                // Save back to file using System.Text.Json
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string updatedJson = JsonSerializer.Serialize(updatedEventData, options);
+                File.WriteAllText(eventDataPath, updatedJson);
+
+                Console.WriteLine($"Saved booking event for room {roomId} from {checkIn:yyyy-MM-dd} to {checkOut:yyyy-MM-dd}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error saving booking to event data: {ex.Message}");
             }
         }
 
@@ -1161,9 +1454,8 @@ namespace HomestayManagementSystem
                     Console.WriteLine($"Could not load additional user info: {ex.Message}");
                 }
 
-                // Add guest information to current guest array
-                var guestList = room.getCurGuest().ToList();
-                guestList.Add(new Person
+                // Create primary guest (account owner)
+                var primaryGuest = new Person
                 {
                     name = customerName,
                     age = (uint)(DateTime.Today.Year - birthDate.Year),
@@ -1172,13 +1464,33 @@ namespace HomestayManagementSystem
                     CCCD = cccd,
                     phoneNumber = phoneNumber,
                     address = address
-                });
-                room.setCurGuest(guestList.ToArray());
+                };
 
-                // Save to JSON to maintain persistence
+                // For now, just set the primary guest. Additional guests will be managed through events
+                room.setCurGuest(new[] { primaryGuest });
+
+                // Update ROOMDATA.json (without curGuest field for persistence)
                 string jsonPath = @"./Data/Rooms/ROOMDATA.json";
                 var allRooms = roomList.getAllRoomsDetailed().Values.ToList();
-                Room.SaveRoomsToJson(allRooms, jsonPath);
+
+                // Create room data without curGuest field
+                var roomsData = allRooms.Select(r => new
+                {
+                    ID = int.Parse(r.getID()),
+                    numBeds = r.getNumBeds(),
+                    haveBalcony = r.getHaveBalcony(),
+                    haveKitchen = r.getHaveKitchen(),
+                    haveBathtub = r.getHaveBathtub(),
+                    capacity = r.getCapacity(),
+                    price = r.getPrice(),
+                    state = r.getState()
+                    // Removed curGuest field
+                }).ToList();
+
+                var roomDataObj = new { rooms = roomsData };
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string roomJson = JsonSerializer.Serialize(roomDataObj, options);
+                File.WriteAllText(jsonPath, roomJson);
 
                 string displayInfo;
                 try
@@ -1197,7 +1509,6 @@ namespace HomestayManagementSystem
                 throw new Exception($"Error saving booking information: {ex.Message}");
             }
         }
-
         private void RefreshGuestMenu()
         {
             try

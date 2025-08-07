@@ -47,29 +47,29 @@ namespace HomestayManagementSystem
             {
                 // Load rooms from JSON using existing Room class method
                 var rooms = Room.LoadRoomsFromJson(filePath);
-                
+
                 // Add rooms to RoomList if they don't exist
                 foreach (var room in rooms)
                 {
                     try
                     {
                         uint roomId = uint.Parse(room.getID());
-                        
+
                         // Try to get existing room, if not found, add it
                         try
                         {
                             roomList.getRoom(roomId);
-                            
-                            // Room exists, update its data
+
+                            // Room exists, update its data (excluding curGuest)
                             var existingRoom = roomList.getRoom(roomId);
                             existingRoom.setState(room.getState());
-                            existingRoom.setCurGuest(room.getCurGuest());
                             existingRoom.setPrice(room.getPrice());
                             existingRoom.setNumBeds(room.getNumBeds());
                             existingRoom.setHaveBalcony(room.getHaveBalcony());
                             existingRoom.setHaveKitchen(room.getHaveKitchen());
                             existingRoom.setHaveBathtub(room.getHaveBathtub());
                             existingRoom.setCapacity(room.getCapacity());
+                            // Remove setCurGuest since guest info is now in events
                         }
                         catch (ArgumentException)
                         {
@@ -77,14 +77,14 @@ namespace HomestayManagementSystem
                             RoomType roomType = DetermineRoomType(room);
                             uint option = DetermineRoomOption(room);
                             roomList.addRoom(roomId, option, roomType);
-                            
-                            // Update the room with loaded data
+
+                            // Update the room with loaded data (excluding curGuest)
                             var addedRoom = roomList.getRoom(roomId);
                             addedRoom.setState(room.getState());
-                            addedRoom.setCurGuest(room.getCurGuest());
                             addedRoom.setPrice(room.getPrice());
+                            // Remove setCurGuest since guest info is now in events
                         }
-                        
+
                         displayedRoomIds.Add(roomId);
                     }
                     catch (Exception ex)
@@ -98,7 +98,7 @@ namespace HomestayManagementSystem
                 MessageBox.Show($"Error loading room data from JSON: {ex.Message}");
             }
         }
-
+        
         private RoomType DetermineRoomType(Room room)
         {
             // Logic to determine room type based on amenities and price
@@ -132,7 +132,7 @@ namespace HomestayManagementSystem
                 {
                     Text = $"More info - {roomData.getDisplayInfo()}", // Use polymorphic method
                     Width = 450,
-                    Height = 500,
+                    Height = 600, // Increased height for event information
                     StartPosition = FormStartPosition.CenterParent
                 };
 
@@ -146,15 +146,18 @@ namespace HomestayManagementSystem
                 Label roomBedsLabel = new Label { Text = $"Number of beds: {roomData.getNumBeds()}", Left = 20, Top = 140, AutoSize = true };
                 Label maxPersonsLabel = new Label { Text = $"Max capacity: {roomData.getMaxPersons()} people", Left = 20, Top = 170, AutoSize = true };
                 Label amenitiesLabel = new Label { Text = $"Amenities: {roomData.getAmenitiesText()}", Left = 20, Top = 200, AutoSize = true, Width = 400 };
-                Label guestCountLabel = new Label { Text = $"Current guests: {roomData.getCurrentGuestCount()}", Left = 20, Top = 230, AutoSize = true };
-                
-                // Guest names with proper handling
-                string guestNames = roomData.getGuestNames();
-                Label guestNamesLabel = new Label 
-                { 
-                    Text = $"Guest names: {(string.IsNullOrEmpty(guestNames) ? "None" : guestNames)}", 
-                    Left = 20, 
-                    Top = 260, 
+
+                // Get guest information from events instead of room curGuest
+                var roomAvailability = roomList.getRoomAvailabilityInfo(uint.Parse(roomData.getID()), DateTime.Today, DateTime.Today);
+
+                Label guestCountLabel = new Label { Text = $"Current guests: {roomAvailability.GuestCount}", Left = 20, Top = 230, AutoSize = true };
+
+                // Guest names with proper handling from events
+                Label guestNamesLabel = new Label
+                {
+                    Text = $"Guest names: {(string.IsNullOrEmpty(roomAvailability.GuestNames) ? "None" : roomAvailability.GuestNames)}",
+                    Left = 20,
+                    Top = 260,
                     AutoSize = true,
                     Width = 400
                 };
@@ -162,14 +165,25 @@ namespace HomestayManagementSystem
                 // Room type information
                 Label roomTypeLabel = new Label { Text = $"Room type: {roomData.getRoomType()}", Left = 20, Top = 290, AutoSize = true };
 
+                // Current event information - Fixed to use the room's actual state instead of availability info
+                Label eventInfoLabel = new Label
+                {
+                    Text = $"Booking status: {roomStatusText}",  // Use the same status text as the main display
+                    Left = 20,
+                    Top = 320,
+                    AutoSize = true,
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    ForeColor = roomData.getState() == 0 ? Color.Green : Color.Red  // Use room's actual state
+                };
+
                 // Create buttons
-                Button closeButton = new Button { Text = "Close", Left = 50, Top = 380, Width = 100, Height = 50 };
-                Button editButton = new Button { Text = "Edit Room", Left = 175, Top = 380, Width = 100, Height = 50 };
-                Button deleteButton = new Button { Text = "Delete Room", Left = 300, Top = 380, Width = 100, Height = 50, BackColor = Color.LightCoral };
+                Button closeButton = new Button { Text = "Close", Left = 50, Top = 480, Width = 100, Height = 50 };
+                Button editButton = new Button { Text = "Edit Room", Left = 175, Top = 480, Width = 100, Height = 50 };
+                Button deleteButton = new Button { Text = "Delete Room", Left = 300, Top = 480, Width = 100, Height = 50, BackColor = Color.LightCoral };
 
                 // Event handlers
                 closeButton.Click += (closeSender, closeArgs) => roomInfoForm.Close();
-                
+
                 editButton.Click += (editSender, editArgs) =>
                 {
                     // TODO: Implement room editing functionality
@@ -178,7 +192,7 @@ namespace HomestayManagementSystem
 
                 deleteButton.Click += (deleteSender, deleteArgs) =>
                 {
-                    var result = MessageBox.Show($"Are you sure you want to delete {roomData.getDisplayInfo()}?", 
+                    var result = MessageBox.Show($"Are you sure you want to delete {roomData.getDisplayInfo()}?",
                                                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.Yes)
                     {
@@ -208,6 +222,7 @@ namespace HomestayManagementSystem
                 roomInfoForm.Controls.Add(guestCountLabel);
                 roomInfoForm.Controls.Add(guestNamesLabel);
                 roomInfoForm.Controls.Add(roomTypeLabel);
+                roomInfoForm.Controls.Add(eventInfoLabel);
                 roomInfoForm.Controls.Add(closeButton);
                 roomInfoForm.Controls.Add(editButton);
                 roomInfoForm.Controls.Add(deleteButton);
@@ -219,7 +234,6 @@ namespace HomestayManagementSystem
                 MessageBox.Show($"Error loading room information: {ex.Message}");
             }
         }
-
         private Panel createRoomPanel(Room data)
         {
             string roomId = data.getID();
@@ -260,10 +274,11 @@ namespace HomestayManagementSystem
                 ForeColor = Color.DarkBlue
             };
 
-            // Guest info using polymorphic method
+            // Guest info from availability info (events)
+            var roomAvailability = roomList.getRoomAvailabilityInfo(uint.Parse(roomId), DateTime.Today, DateTime.Today);
             Label guestLabel = new Label
             {
-                Text = $"Guests: {data.getCurrentGuestCount()} | {data.getGuestNames()}", // Use polymorphic methods
+                Text = $"Guests: {roomAvailability.GuestCount} | {roomAvailability.GuestNames}",
                 AutoSize = false,
                 Height = 20,
                 Dock = DockStyle.Top,

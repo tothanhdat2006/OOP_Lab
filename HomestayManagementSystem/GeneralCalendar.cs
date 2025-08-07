@@ -40,7 +40,7 @@ namespace HomestayManagementSystem
 
                 // Load rooms using existing Room.LoadRoomsFromJson method
                 var rooms = Room.LoadRoomsFromJson(roomDataPath);
-                
+
                 // Add rooms to RoomList if they don't exist
                 foreach (var room in rooms)
                 {
@@ -58,12 +58,12 @@ namespace HomestayManagementSystem
                             RoomType roomType = DetermineRoomType(room);
                             uint option = DetermineRoomOption(room);
                             roomList.addRoom(roomId, option, roomType);
-                            
-                            // Update the room with loaded data
+
+                            // Update the room with loaded data (excluding curGuest)
                             var addedRoom = roomList.getRoom(roomId);
                             addedRoom.setState(room.getState());
-                            addedRoom.setCurGuest(room.getCurGuest());
                             addedRoom.setPrice(room.getPrice());
+                            // Remove setCurGuest since guest info is now in events
                         }
                     }
                     catch (Exception ex)
@@ -122,60 +122,157 @@ namespace HomestayManagementSystem
                 {
                     foreach (JsonElement eventElement in eventsArray.EnumerateArray())
                     {
-                        int roomId = eventElement.GetProperty("roomId").GetInt32();
-
-                        var startDateElement = eventElement.GetProperty("startDate");
-                        int startDay = startDateElement.GetProperty("day").GetInt32();
-                        int startMonth = startDateElement.GetProperty("month").GetInt32();
-                        int startYear = startDateElement.GetProperty("year").GetInt32();
-                        Calendar.Date startDate = new Calendar.Date(startDay, startMonth, startYear);
-
-                        var endDateElement = eventElement.GetProperty("endDate");
-                        int endDay = endDateElement.GetProperty("day").GetInt32();
-                        int endMonth = endDateElement.GetProperty("month").GetInt32();
-                        int endYear = endDateElement.GetProperty("year").GetInt32();
-                        Calendar.Date endDate = new Calendar.Date(endDay, endMonth, endYear);
-
-                        string type = "Occupied"; // Default for events
-
-                        Calendar.Event eventObj;
-
-                        // Load guest information if available
-                        if (eventElement.TryGetProperty("guestInfo", out JsonElement guestElement))
+                        try
                         {
-                            Person guest = new Person();
+                            // Safely get room ID
+                            if (!eventElement.TryGetProperty("roomId", out JsonElement roomIdElement))
+                                continue;
+                            int roomId = roomIdElement.GetInt32();
 
-                            if (guestElement.TryGetProperty("name", out JsonElement nameElement))
-                                guest.name = nameElement.GetString() ?? "";
+                            // Safely get start date
+                            if (!eventElement.TryGetProperty("startDate", out JsonElement startDateElement))
+                                continue;
 
-                            if (guestElement.TryGetProperty("age", out JsonElement ageElement) &&
-                                ageElement.TryGetUInt32(out uint age))
-                                guest.age = age;
+                            if (!startDateElement.TryGetProperty("day", out JsonElement startDayElement) ||
+                                !startDateElement.TryGetProperty("month", out JsonElement startMonthElement) ||
+                                !startDateElement.TryGetProperty("year", out JsonElement startYearElement))
+                                continue;
 
-                            if (guestElement.TryGetProperty("sex", out JsonElement sexElement))
-                                guest.sex = sexElement.GetBoolean();
+                            int startDay = startDayElement.GetInt32();
+                            int startMonth = startMonthElement.GetInt32();
+                            int startYear = startYearElement.GetInt32();
+                            Calendar.Date startDate = new Calendar.Date(startDay, startMonth, startYear);
 
-                            if (guestElement.TryGetProperty("mail", out JsonElement mailElement))
-                                guest.mail = mailElement.GetString() ?? "";
+                            // Safely get end date
+                            if (!eventElement.TryGetProperty("endDate", out JsonElement endDateElement))
+                                continue;
 
-                            if (guestElement.TryGetProperty("CCCD", out JsonElement cccdElement))
-                                guest.CCCD = cccdElement.GetString() ?? "";
+                            if (!endDateElement.TryGetProperty("day", out JsonElement endDayElement) ||
+                                !endDateElement.TryGetProperty("month", out JsonElement endMonthElement) ||
+                                !endDateElement.TryGetProperty("year", out JsonElement endYearElement))
+                                continue;
 
-                            if (guestElement.TryGetProperty("phoneNumber", out JsonElement phoneElement))
-                                guest.phoneNumber = phoneElement.GetString() ?? "";
+                            int endDay = endDayElement.GetInt32();
+                            int endMonth = endMonthElement.GetInt32();
+                            int endYear = endYearElement.GetInt32();
+                            Calendar.Date endDate = new Calendar.Date(endDay, endMonth, endYear);
 
-                            if (guestElement.TryGetProperty("address", out JsonElement addressElement))
-                                guest.address = addressElement.GetString() ?? "";
+                            string type = "Occupied"; // Default for events
 
-                            eventObj = new Calendar.Event(type, roomId, startDate, endDate, guest);
+                            Calendar.Event eventObj;
+
+                            // Load primary guest information and additional guests
+                            if (eventElement.TryGetProperty("guestInfo", out JsonElement guestElement) &&
+                                guestElement.ValueKind != JsonValueKind.Null)
+                            {
+                                Person primaryGuest = new Person();
+
+                                if (guestElement.TryGetProperty("name", out JsonElement nameElement) &&
+                                    nameElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.name = nameElement.GetString() ?? "";
+
+                                if (guestElement.TryGetProperty("age", out JsonElement ageElement) &&
+                                    ageElement.ValueKind != JsonValueKind.Null &&
+                                    ageElement.TryGetUInt32(out uint age))
+                                    primaryGuest.age = age;
+
+                                if (guestElement.TryGetProperty("sex", out JsonElement sexElement) &&
+                                    sexElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.sex = sexElement.GetBoolean();
+
+                                if (guestElement.TryGetProperty("mail", out JsonElement mailElement) &&
+                                    mailElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.mail = mailElement.GetString() ?? "";
+
+                                if (guestElement.TryGetProperty("CCCD", out JsonElement cccdElement) &&
+                                    cccdElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.CCCD = cccdElement.GetString() ?? "";
+
+                                if (guestElement.TryGetProperty("phoneNumber", out JsonElement phoneElement) &&
+                                    phoneElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.phoneNumber = phoneElement.GetString() ?? "";
+
+                                if (guestElement.TryGetProperty("address", out JsonElement addressElement) &&
+                                    addressElement.ValueKind != JsonValueKind.Null)
+                                    primaryGuest.address = addressElement.GetString() ?? "";
+
+                                // Load additional guests if available
+                                var allGuests = new List<Person> { primaryGuest };
+
+                                if (eventElement.TryGetProperty("additionalGuests", out JsonElement additionalGuestsArray) &&
+                                    additionalGuestsArray.ValueKind == JsonValueKind.Array)
+                                {
+                                    foreach (JsonElement additionalGuestElement in additionalGuestsArray.EnumerateArray())
+                                    {
+                                        if (additionalGuestElement.ValueKind == JsonValueKind.Null)
+                                            continue;
+
+                                        Person additionalGuest = new Person();
+
+                                        if (additionalGuestElement.TryGetProperty("name", out JsonElement addNameElement) &&
+                                            addNameElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.name = addNameElement.GetString() ?? "";
+
+                                        if (additionalGuestElement.TryGetProperty("age", out JsonElement addAgeElement) &&
+                                            addAgeElement.ValueKind != JsonValueKind.Null &&
+                                            addAgeElement.TryGetUInt32(out uint addAge))
+                                            additionalGuest.age = addAge;
+
+                                        if (additionalGuestElement.TryGetProperty("sex", out JsonElement addSexElement) &&
+                                            addSexElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.sex = addSexElement.GetBoolean();
+
+                                        if (additionalGuestElement.TryGetProperty("mail", out JsonElement addMailElement) &&
+                                            addMailElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.mail = addMailElement.GetString() ?? "";
+
+                                        if (additionalGuestElement.TryGetProperty("CCCD", out JsonElement addCccdElement) &&
+                                            addCccdElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.CCCD = addCccdElement.GetString() ?? "";
+
+                                        if (additionalGuestElement.TryGetProperty("phoneNumber", out JsonElement addPhoneElement) &&
+                                            addPhoneElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.phoneNumber = addPhoneElement.GetString() ?? "";
+
+                                        if (additionalGuestElement.TryGetProperty("address", out JsonElement addAddressElement) &&
+                                            addAddressElement.ValueKind != JsonValueKind.Null)
+                                            additionalGuest.address = addAddressElement.GetString() ?? "";
+
+                                        allGuests.Add(additionalGuest);
+                                    }
+                                }
+
+                                eventObj = new Calendar.Event(type, roomId, startDate, endDate, primaryGuest);
+
+                                // Store all guests in the room's current guest list
+                                if (roomList != null)
+                                {
+                                    try
+                                    {
+                                        var room = roomList.getRoom((uint)roomId);
+                                        room.setCurGuest(allGuests.ToArray());
+                                    }
+                                    catch (ArgumentException)
+                                    {
+                                        // Room not found in RoomList, skip guest assignment
+                                        Console.WriteLine($"Room {roomId} not found in RoomList, skipping guest assignment");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                eventObj = new Calendar.Event(type, roomId, startDate, endDate);
+                            }
+
+                            events.Add(eventObj);
+                            calendar.AddEvent(eventObj);
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            eventObj = new Calendar.Event(type, roomId, startDate, endDate);
+                            Console.WriteLine($"Error processing event: {ex.Message}");
+                            // Continue with next event instead of failing completely
+                            continue;
                         }
-
-                        events.Add(eventObj);
-                        calendar.AddEvent(eventObj);
                     }
                 }
 
@@ -323,7 +420,7 @@ namespace HomestayManagementSystem
             try
             {
                 var availabilityInfo = roomList.getRoomAvailabilityInfo(roomId, currentDay, currentDay);
-                
+
                 if (!availabilityInfo.IsAvailable)
                 {
                     Label eventLabel = new Label
@@ -377,6 +474,7 @@ namespace HomestayManagementSystem
                     BackColor = Color.White
                 };
                 wrapPanel.Controls.Add(errorLabel);
+                Console.WriteLine($"Error creating event panel for room {roomId}: {ex.Message}");
             }
 
             return wrapPanel;
@@ -426,7 +524,7 @@ namespace HomestayManagementSystem
                 var availabilityInfo = roomList.getRoomAvailabilityInfo(roomId, currentWeekStart, currentWeekStart.AddDays(6));
 
                 Color roomColor = GetEventColor(availabilityInfo.StateText);
-                
+
                 Panel roomPanel = new Panel
                 {
                     Width = room_flowPanel.Width - 15,
@@ -461,8 +559,8 @@ namespace HomestayManagementSystem
                 };
 
                 // Current occupancy using polymorphic methods
-                string occupancyText = availabilityInfo.GuestCount == 0 
-                    ? "👤 No current guests" 
+                string occupancyText = availabilityInfo.GuestCount == 0
+                    ? "👤 No current guests"
                     : $"👥 {availabilityInfo.GuestCount} guest(s)\n{room.getGuestNames()}"; // Polymorphic method
 
                 Label occupancyLabel = new Label

@@ -1,4 +1,4 @@
-﻿{
+{
   "events": [
     {
       "roomId": 101,
@@ -11,7 +11,36 @@
         "day": 24,
         "month": 7,
         "year": 2025
-      }
+      },
+      "guestInfo": {
+        "name": "Nguyen Van A",
+        "age": 28,
+        "sex": false,
+        "mail": "nguyenvana@email.com",
+        "CCCD": "123456789012",
+        "phoneNumber": "0901234567",
+        "address": "123 Main St, Ho Chi Minh City"
+      },
+      "additionalGuests": [
+        {
+          "name": "asd",
+          "age": 6,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        },
+        {
+          "name": "aasdd",
+          "age": 7,
+          "sex": false,
+          "mail": "as@gmail.com",
+          "CCCD": "0001",
+          "phoneNumber": "0999",
+          "address": "HCM"
+        }
+      ]
     },
     {
       "roomId": 102,
@@ -24,7 +53,17 @@
         "day": 23,
         "month": 7,
         "year": 2025
-      }
+      },
+      "guestInfo": {
+        "name": "Tran Thi B",
+        "age": 25,
+        "sex": true,
+        "mail": "tranthib@email.com",
+        "CCCD": "987654321098",
+        "phoneNumber": "0909876543",
+        "address": "456 Second St, Ha Noi"
+      },
+      "additionalGuests": []
     },
     {
       "roomId": 201,
@@ -37,7 +76,17 @@
         "day": 28,
         "month": 7,
         "year": 2025
-      }
+      },
+      "guestInfo": {
+        "name": "Le Van C",
+        "age": 35,
+        "sex": false,
+        "mail": "levanc@email.com",
+        "CCCD": "456789123456",
+        "phoneNumber": "0912345678",
+        "address": "789 Third Ave, Da Nang"
+      },
+      "additionalGuests": []
     },
     {
       "roomId": 202,
@@ -50,7 +99,63 @@
         "day": 27,
         "month": 7,
         "year": 2025
-      }
+      },
+      "guestInfo": {
+        "name": "Pham Thi D",
+        "age": 30,
+        "sex": true,
+        "mail": "phamthid@email.com",
+        "CCCD": "321654987321",
+        "phoneNumber": "0987654321",
+        "address": "321 Fourth Blvd, Can Tho"
+      },
+      "additionalGuests": []
+    },
+    {
+      "roomId": 102,
+      "startDate": {
+        "day": 7,
+        "month": 8,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 14,
+        "month": 8,
+        "year": 2025
+      },
+      "guestInfo": {
+        "name": "Test User",
+        "age": 19,
+        "sex": false,
+        "mail": "test@gmail.com",
+        "CCCD": "123456789012",
+        "phoneNumber": "0000000000",
+        "address": "227 Nguyen Van Cu, q5"
+      },
+      "additionalGuests": []
+    },
+    {
+      "roomId": 201,
+      "startDate": {
+        "day": 7,
+        "month": 8,
+        "year": 2025
+      },
+      "endDate": {
+        "day": 8,
+        "month": 8,
+        "year": 2025
+      },
+      "guestInfo": {
+        "name": "Test User",
+        "age": 19,
+        "sex": false,
+        "mail": "test@gmail.com",
+        "CCCD": "123456789012",
+        "phoneNumber": "0000000000",
+        "address": "227 Nguyen Van Cu, q5"
+      },
+      "additionalGuests": []
     }
   ]
 }
