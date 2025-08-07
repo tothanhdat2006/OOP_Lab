@@ -1506,8 +1506,7 @@ namespace HomestayManagementSystem
                 // Clear preview panel first to avoid issues
                 ClearPreviewPanel();
 
-                bookRoom_flowLayoutPanel.Controls.Clear();
-
+                // Don't clear all controls, LoadRoomPanels() will handle removing only room panels
                 LoadRoomPanels();
                 UpdateRoomSelectionBox();
 
@@ -1671,7 +1670,17 @@ namespace HomestayManagementSystem
         {
             try
             {
-                bookRoom_flowLayoutPanel.Controls.Clear();
+                // Remove only room panels, preserve search controls (label2 and room_selection_box)
+                var controlsToRemove = bookRoom_flowLayoutPanel.Controls
+                    .OfType<Panel>()
+                    .Where(p => p.Name.StartsWith("RoomPanel_"))
+                    .ToList();
+
+                foreach (var control in controlsToRemove)
+                {
+                    bookRoom_flowLayoutPanel.Controls.Remove(control);
+                    control.Dispose();
+                }
 
                 foreach (uint roomId in displayedRoomIds)
                 {
@@ -1770,8 +1779,10 @@ namespace HomestayManagementSystem
             try
             {
                 // Clear images before navigating
+                MessageBox.Show("Closing");
                 ClearPreviewPanel();
 
+                MessageBox.Show("Cleared");
                 var mainMenu_Form = (mainMenu)Tag;
                 mainMenu_Form.Show();
                 Close();
@@ -1828,51 +1839,188 @@ namespace HomestayManagementSystem
 
                 guestAccount.SetAccountInfo(userInfo);
 
-                string rank = customerSection["Rank"];
-                string currentRoom = customerSection.ContainsKey("CurrentRoom") ? customerSection["CurrentRoom"] : "";
-
                 Form infoForm = new Form
                 {
                     Text = "User Information",
                     Width = 500,
-                    Height = 400,
+                    Height = 450,
                     StartPosition = FormStartPosition.CenterParent
                 };
 
-                Label nameLabel = new Label { Text = $"Name: {userInfo.FullName}", Left = 20, Top = 20, AutoSize = true };
-                Label birthLabel = new Label { Text = $"Birth year: {userInfo.BirthDay}", Left = 20, Top = 50, AutoSize = true };
-                Label CCCDLabel = new Label { Text = $"CCCD: {userInfo.CCCD}", Left = 20, Top = 80, AutoSize = true };
-                Label addressLabel = new Label { Text = $"Address: {userInfo.Address}", Left = 20, Top = 110, AutoSize = true };
-                Label phoneLabel = new Label { Text = $"Phone: {userInfo.PhoneNumber}", Left = 20, Top = 140, AutoSize = true };
-                Label emailLabel = new Label { Text = $"Email: {userInfo.Email}", Left = 20, Top = 170, AutoSize = true };
-                Label roomLabel = new Label { Text = $"Current room: {currentRoom}", Left = 20, Top = 200, AutoSize = true };
-                Label rankLabel = new Label { Text = $"Member rank: {rank} (View benefits)", Left = 20, Top = 230, AutoSize = true };
+                // Create TextBoxes for editing instead of Labels
+                Label nameLabel = new Label { Text = "Name:", Left = 20, Top = 20, AutoSize = true };
+                TextBox nameTextBox = new TextBox { Text = userInfo.FullName, Left = 150, Top = 20, Width = 300 };
 
-                Button editButton = new Button { Text = "Edit", Left = 60, Top = 280, Width = 100 };
-                Button saveButton = new Button { Text = "Save", Left = 220, Top = 280, Width = 100 };
+                Label birthLabel = new Label { Text = "Birth date:", Left = 20, Top = 60, AutoSize = true };
+                DateTimePicker birthDatePicker = new DateTimePicker
+                {
+                    Left = 150,
+                    Top = 60,
+                    Width = 200,
+                    Format = DateTimePickerFormat.Short
+                };
+
+                // Parse existing birth date
+                if (DateTime.TryParse(userInfo.BirthDay, out DateTime birthDate))
+                {
+                    birthDatePicker.Value = birthDate;
+                }
+
+                Label cccdLabel = new Label { Text = "CCCD:", Left = 20, Top = 100, AutoSize = true };
+                TextBox cccdTextBox = new TextBox { Text = userInfo.CCCD, Left = 150, Top = 100, Width = 300, MaxLength = 12 };
+
+                Label addressLabel = new Label { Text = "Address:", Left = 20, Top = 140, AutoSize = true };
+                TextBox addressTextBox = new TextBox { Text = userInfo.Address, Left = 150, Top = 140, Width = 300 };
+
+                Label phoneLabel = new Label { Text = "Phone:", Left = 20, Top = 180, AutoSize = true };
+                TextBox phoneTextBox = new TextBox { Text = userInfo.PhoneNumber, Left = 150, Top = 180, Width = 300, MaxLength = 15 };
+
+                Label emailLabel = new Label { Text = "Email:", Left = 20, Top = 220, AutoSize = true };
+                TextBox emailTextBox = new TextBox { Text = userInfo.Email, Left = 150, Top = 220, Width = 300 };
+
+                Label sexLabel = new Label { Text = "Gender:", Left = 20, Top = 260, AutoSize = true };
+                ComboBox sexComboBox = new ComboBox
+                {
+                    Left = 150,
+                    Top = 260,
+                    Width = 100,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
+                sexComboBox.Items.AddRange(new string[] { "Male", "Female" });
+                sexComboBox.SelectedItem = userInfo.Sex == 'F' ? "Female" : "Male";
+
+                // Add validation for CCCD
+                cccdTextBox.KeyPress += (sender, e) =>
+                {
+                    if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+                    {
+                        e.Handled = true;
+                    }
+                };
+
+                // Add validation for phone
+                phoneTextBox.KeyPress += (sender, e) =>
+                {
+                    if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+                    {
+                        e.Handled = true;
+                    }
+                };
+
+                Button editButton = new Button { Text = "Edit", Left = 60, Top = 320, Width = 100, Height = 50 };
+                Button saveButton = new Button { Text = "Save", Left = 180, Top = 320, Width = 100, Height = 50 };
+                Button cancelButton = new Button { Text = "Cancel", Left = 300, Top = 320, Width = 100, Height = 50 };
+
+                // Initially disable editing
+                SetEditMode(false, nameTextBox, birthDatePicker, cccdTextBox, addressTextBox, phoneTextBox, emailTextBox, sexComboBox, saveButton);
+
+                editButton.Click += (editSender, editArgs) =>
+                {
+                    SetEditMode(true, nameTextBox, birthDatePicker, cccdTextBox, addressTextBox, phoneTextBox, emailTextBox, sexComboBox, saveButton);
+                };
 
                 saveButton.Click += (saveSender, saveArgs) =>
                 {
-                    MessageBox.Show("Information has been saved!");
-                    infoForm.Close();
+                    try
+                    {
+                        // Validation
+                        if (string.IsNullOrWhiteSpace(nameTextBox.Text))
+                        {
+                            MessageBox.Show("Name cannot be empty.", "Validation Error");
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(cccdTextBox.Text) || cccdTextBox.Text.Length != 12)
+                        {
+                            MessageBox.Show("CCCD must be exactly 12 digits.", "Validation Error");
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(phoneTextBox.Text))
+                        {
+                            MessageBox.Show("Phone number cannot be empty.", "Validation Error");
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(emailTextBox.Text) || !emailTextBox.Text.Contains("@"))
+                        {
+                            MessageBox.Show("Please enter a valid email address.", "Validation Error");
+                            return;
+                        }
+
+                        // Calculate age from birth date
+                        int age = DateTime.Today.Year - birthDatePicker.Value.Year;
+                        if (birthDatePicker.Value.Date > DateTime.Today.AddYears(-age)) age--;
+
+                        // Update the INI file
+                        data["Customer"]["FullName"] = nameTextBox.Text.Trim();
+                        data["Customer"]["Birthday"] = birthDatePicker.Value.ToString("dd/MM/yyyy");
+                        data["Customer"]["Age"] = age.ToString();
+                        data["Customer"]["CCCD"] = cccdTextBox.Text.Trim();
+                        data["Customer"]["HomeAddress"] = addressTextBox.Text.Trim();
+                        data["Customer"]["Phone"] = phoneTextBox.Text.Trim();
+                        data["Customer"]["Email"] = emailTextBox.Text.Trim();
+                        data["Customer"]["Sex"] = sexComboBox.SelectedItem.ToString();
+
+                        // Save to file
+                        parser.WriteFile(iniPath, data);
+
+                        MessageBox.Show("Information has been saved successfully!", "Success");
+                        SetEditMode(false, nameTextBox, birthDatePicker, cccdTextBox, addressTextBox, phoneTextBox, emailTextBox, sexComboBox, saveButton);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving information: {ex.Message}", "Error");
+                    }
                 };
 
+                cancelButton.Click += (cancelSender, cancelArgs) => infoForm.Close();
+
                 infoForm.Controls.Add(nameLabel);
+                infoForm.Controls.Add(nameTextBox);
                 infoForm.Controls.Add(birthLabel);
-                infoForm.Controls.Add(CCCDLabel);
+                infoForm.Controls.Add(birthDatePicker);
+                infoForm.Controls.Add(cccdLabel);
+                infoForm.Controls.Add(cccdTextBox);
                 infoForm.Controls.Add(addressLabel);
+                infoForm.Controls.Add(addressTextBox);
                 infoForm.Controls.Add(phoneLabel);
+                infoForm.Controls.Add(phoneTextBox);
                 infoForm.Controls.Add(emailLabel);
-                infoForm.Controls.Add(roomLabel);
-                infoForm.Controls.Add(rankLabel);
+                infoForm.Controls.Add(emailTextBox);
+                infoForm.Controls.Add(sexLabel);
+                infoForm.Controls.Add(sexComboBox);
                 infoForm.Controls.Add(editButton);
                 infoForm.Controls.Add(saveButton);
+                infoForm.Controls.Add(cancelButton);
 
                 infoForm.ShowDialog();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error displaying user info: {ex.Message}");
+            }
+        }
+
+        private void SetEditMode(bool isEditMode, params Control[] controls)
+        {
+            foreach (Control control in controls.Take(controls.Length - 1)) // Exclude save button
+            {
+                control.Enabled = isEditMode;
+            }
+            controls.Last().Enabled = isEditMode; // Enable/disable save button
+        }
+
+        private void GuestMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var mainMenu_Form = Tag as mainMenu;
+            if (mainMenu_Form != null)
+            {
+                mainMenu_Form.Show();
+            }
+            else
+            {
+                Application.Exit(); // If mainMenu_Form is null, exit the application
             }
         }
     }

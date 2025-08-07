@@ -54,7 +54,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(417, 3);
+            label1.Location = new Point(417, -2);
             label1.Name = "label1";
             label1.Size = new Size(179, 45);
             label1.TabIndex = 4;
@@ -65,7 +65,8 @@
             label2.AutoSize = true;
             label2.Dock = DockStyle.Top;
             label2.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(3, 0);
+            label2.Location = new Point(0, 0);
+            label2.Margin = new Padding(0);
             label2.Name = "label2";
             label2.Size = new Size(203, 30);
             label2.TabIndex = 0;
@@ -107,9 +108,10 @@
             // 
             room_selection_box.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             room_selection_box.AutoCompleteSource = AutoCompleteSource.ListItems;
+            room_selection_box.Dock = DockStyle.Top;
             room_selection_box.FormattingEnabled = true;
-            room_selection_box.Location = new Point(212, 2);
-            room_selection_box.Margin = new Padding(3, 2, 3, 2);
+            room_selection_box.Location = new Point(206, 2);
+            room_selection_box.Margin = new Padding(3, 2, 3, 8);
             room_selection_box.Name = "room_selection_box";
             room_selection_box.Size = new Size(539, 23);
             room_selection_box.TabIndex = 1;
@@ -135,6 +137,7 @@
             Controls.Add(preview_flowLayoutPanel);
             Controls.Add(bookRoom_flowLayoutPanel);
             Name = "GuestMenu";
+            FormClosed += GuestMenu_FormClosed;
             preview_flowLayoutPanel.ResumeLayout(false);
             preview_flowLayoutPanel.PerformLayout();
             bookRoom_flowLayoutPanel.ResumeLayout(false);
